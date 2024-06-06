@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.sp
 import java.time.LocalTime
 
 data class TakeDateViewItem(
-    val time: LocalTime,
+    val hour: Int,
+    val minute: Int,
     val dayList: List<Pair<String, Boolean>>,
 )
 

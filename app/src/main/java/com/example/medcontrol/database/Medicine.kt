@@ -7,7 +7,8 @@ import java.sql.Time
 import java.time.LocalTime
 
 data class TakeDate (
-    val localTime: LocalTime,
+    val hour: Int,
+    val minute: Int,
     val isMonday: Boolean,
     val isTuesday: Boolean,
     val isWednesday: Boolean,
