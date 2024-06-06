@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MedControl</string>
+    <string name="empty_list">You look like a healthy person, please get sick so I can get some money.</string>
 </resources>
