@@ -25,7 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.room.Room
 import com.example.medcontrol.R
+import com.example.medcontrol.database.AppDatabase
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -40,6 +42,17 @@ fun HomeScreen() {
     val m3 = MedicineViewItem(name = "Test", nextTake = "Jutro", icon = Icons.Default.AccountCircle)
 
     val meds = arrayOf(m1, m2, m3)
+
+    // creating database
+    val db by lazy {
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "medicine.db"
+        ).build()
+    }
+
+//    val medDao = db.medicineDao()
 
     Scaffold (
         modifier = Modifier
