@@ -1,4 +1,4 @@
-package com.example.medcontrol.homescreen
+package com.example.medcontrol.homescreen.modal
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ScrollState

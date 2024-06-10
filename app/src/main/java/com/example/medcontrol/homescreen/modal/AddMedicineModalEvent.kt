@@ -1,4 +1,4 @@
-package com.example.medcontrol.homescreen
+package com.example.medcontrol.homescreen.modal
 
 import java.time.DayOfWeek
 import java.util.UUID

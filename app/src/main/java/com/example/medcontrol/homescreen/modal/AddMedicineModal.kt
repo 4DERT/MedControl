@@ -1,4 +1,4 @@
-package com.example.medcontrol.homescreen
+package com.example.medcontrol.homescreen.modal
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.medcontrol.R
-import com.example.medcontrol.database.Medicine
 import java.time.DayOfWeek
 import java.time.LocalTime
 import java.util.UUID

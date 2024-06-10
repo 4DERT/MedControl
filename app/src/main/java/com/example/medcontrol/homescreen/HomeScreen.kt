@@ -35,7 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
-import com.example.medcontrol.database.Medicine
+import com.example.medcontrol.homescreen.modal.AddMedicineModal
 
 
 data class HomeScreenViewItem(
