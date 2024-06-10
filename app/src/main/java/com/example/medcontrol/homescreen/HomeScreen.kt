@@ -40,7 +40,6 @@ import com.example.medcontrol.database.Medicine
 
 data class HomeScreenViewItem(
     val isAddMedicineModalVisible: Boolean,
-    val medicineList: List<MedicineViewItem>
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,6 +67,7 @@ fun HomeScreen() {
         }
     )
     val state = viewModel.state.collectAsState()
+    val fabState = viewModel.fabState.collectAsState()
 
     Scaffold(
         modifier = Modifier
@@ -102,11 +102,15 @@ fun HomeScreen() {
             is ItemsListState.Success ->
                 HomeScreenSuccess(
                     innerPadding,
-                    listState.data.medicineList,
-                    listState.data.isAddMedicineModalVisible,
-                    onAddMedicineDismiss = { viewModel.dismissAddMedicineModal() },
-                    onAddMedicineConfirm = {  }
+                    listState.data,
                 )
+        }
+
+        if (fabState.value.isAddMedicineModalVisible) {
+            AddMedicineModal(
+                onDismissRequest = { viewModel.dismissAddMedicineModal() },
+                onConfirm = {  }
+            )
         }
 
 
@@ -119,10 +123,7 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenSuccess(
     contentPadding: PaddingValues,
-    data: List<MedicineViewItem>,
-    isAddMedicineModalVisible: Boolean,
-    onAddMedicineDismiss: () -> Unit = {},
-    onAddMedicineConfirm: (medicine: AddMedicineViewItem) -> Unit = {},
+    data: List<MedicineViewItem>
 ) {
     LazyColumn(
         modifier = Modifier
@@ -132,13 +133,6 @@ fun HomeScreenSuccess(
         items(data) {
             MedicineCard(data = it)
         }
-    }
-
-    if (isAddMedicineModalVisible) {
-        AddMedicineModal(
-            onDismissRequest = onAddMedicineDismiss,
-            onConfirm = onAddMedicineConfirm
-        )
     }
 }
 

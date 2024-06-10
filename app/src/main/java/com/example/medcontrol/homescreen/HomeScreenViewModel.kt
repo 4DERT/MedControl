@@ -18,6 +18,7 @@ class HomeScreenViewModel(
 ) : ViewModel() {
 
     val state = MutableStateFlow<ItemsListState>(ItemsListState.Loading)
+    val fabState = MutableStateFlow(HomeScreenViewItem(isAddMedicineModalVisible = false))
 
     init {
         viewModelScope.launch {
@@ -28,12 +29,7 @@ class HomeScreenViewModel(
                 return@launch
             }
 
-            state.value = ItemsListState.Success(
-                HomeScreenViewItem(
-                    isAddMedicineModalVisible = false,
-                    medicineList = makeList(items)
-                )
-            )
+            state.value = ItemsListState.Success(makeList(items))
         }
     }
 
@@ -121,19 +117,21 @@ class HomeScreenViewModel(
     }
 
     fun showAddMedicineModal() {
-        val currentState = state.value
-        if (currentState is ItemsListState.Success) {
-            val updatedData = currentState.data.copy(isAddMedicineModalVisible = true)
-            state.value = ItemsListState.Success(updatedData)
-        }
+//        val currentState = state.value
+//        if (currentState is ItemsListState.Success) {
+//            val updatedData = currentState.data.copy(isAddMedicineModalVisible = true)
+//            state.value = ItemsListState.Success(updatedData)
+//        }
+        fabState.update { it.copy(isAddMedicineModalVisible = true) }
     }
 
     fun dismissAddMedicineModal() {
-        val currentState = state.value
-        if (currentState is ItemsListState.Success) {
-            val updatedData = currentState.data.copy(isAddMedicineModalVisible = false)
-            state.value = ItemsListState.Success(updatedData)
-        }
+//        val currentState = state.value
+//        if (currentState is ItemsListState.Success) {
+//            val updatedData = currentState.data.copy(isAddMedicineModalVisible = false)
+//            state.value = ItemsListState.Success(updatedData)
+//        }
+        fabState.update { it.copy(isAddMedicineModalVisible = false) }
     }
 
     fun addMedicine(medicine: AddMedicineViewItem) {
