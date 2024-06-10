@@ -9,13 +9,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -77,7 +83,9 @@ fun HomeScreen() {
         },
 
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(
+                onClick = { viewModel.showAddMedicineModal() }
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -98,7 +106,13 @@ fun HomeScreen() {
 
     }
 
+    AddMedicineModal(
+        onDismissRequest = {},
+        onConfirm = {}
+    )
+
 }
+
 
 @Composable
 fun HomeScreenSuccess(contentPadding: PaddingValues, data: List<MedicineViewItem>) {

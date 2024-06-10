@@ -23,7 +23,7 @@ class HomeScreenViewModel(
             val items = dao.getAll()
 
             if (items.isEmpty()) {
-                state.value = ItemsListState.Empty("dupa")
+                state.value = ItemsListState.Empty("test")
                 return@launch
             }
 
@@ -114,5 +114,8 @@ class HomeScreenViewModel(
         }
     }
 
+    fun showAddMedicineModal() {
+
+    }
 
 }

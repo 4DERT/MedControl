@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">MedControl</string>
     <string name="empty_list">You look like a healthy person, please get sick so I can get some money.</string>
+    <string name="notification">Notification</string>
+    <string name="medicine_name">Medicine name</string>
+    <string name="add_notification">Add Notification</string>
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">S</string>
 </resources>
