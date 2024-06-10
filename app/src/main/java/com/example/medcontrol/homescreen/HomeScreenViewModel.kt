@@ -6,6 +6,7 @@ import com.example.medcontrol.database.Medicine
 import com.example.medcontrol.database.MedicineDao
 import com.example.medcontrol.database.TakeDate
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -27,7 +28,12 @@ class HomeScreenViewModel(
                 return@launch
             }
 
-            state.value = ItemsListState.Success(makeList(items))
+            state.value = ItemsListState.Success(
+                HomeScreenViewItem(
+                    isAddMedicineModalVisible = false,
+                    medicineList = makeList(items)
+                )
+            )
         }
     }
 
@@ -115,6 +121,22 @@ class HomeScreenViewModel(
     }
 
     fun showAddMedicineModal() {
+        val currentState = state.value
+        if (currentState is ItemsListState.Success) {
+            val updatedData = currentState.data.copy(isAddMedicineModalVisible = true)
+            state.value = ItemsListState.Success(updatedData)
+        }
+    }
+
+    fun dismissAddMedicineModal() {
+        val currentState = state.value
+        if (currentState is ItemsListState.Success) {
+            val updatedData = currentState.data.copy(isAddMedicineModalVisible = false)
+            state.value = ItemsListState.Success(updatedData)
+        }
+    }
+
+    fun addMedicine(medicine: AddMedicineViewItem) {
 
     }
 

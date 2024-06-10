@@ -34,6 +34,7 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -42,9 +43,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.medcontrol.R
 import com.example.medcontrol.database.Medicine
 import java.time.DayOfWeek
@@ -64,22 +62,14 @@ data class NotificationViewItem(
 data class AddMedicineViewItem(
     val name: String,
     val notifications: List<NotificationViewItem>,
-
-    )
+)
 
 @Composable
-fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (Medicine) -> Unit) {
+fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (AddMedicineViewItem) -> Unit) {
     val context = LocalContext.current
 
-    val viewModel = viewModel<AddMedicineModalViewModel>(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AddMedicineModalViewModel() as T
-            }
-        }
-    )
+    val viewModel = remember { AddMedicineModalViewModel() }
     val state = viewModel.state.collectAsState()
-
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -147,8 +137,7 @@ fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (Medicine) -> Unit
         },
         confirmButton = {
             Button(onClick = {
-
-//                onConfirm()
+                onConfirm(state.value)
             }) {
                 Text("Confirm")
             }

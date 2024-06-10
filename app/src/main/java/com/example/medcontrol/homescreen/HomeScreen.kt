@@ -9,19 +9,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,7 +35,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
+import com.example.medcontrol.database.Medicine
 
+
+data class HomeScreenViewItem(
+    val isAddMedicineModalVisible: Boolean,
+    val medicineList: List<MedicineViewItem>
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,22 +100,30 @@ fun HomeScreen() {
                 HomeScreenEmpty(innerPadding)
 
             is ItemsListState.Success ->
-                HomeScreenSuccess(innerPadding, listState.data)
+                HomeScreenSuccess(
+                    innerPadding,
+                    listState.data.medicineList,
+                    listState.data.isAddMedicineModalVisible,
+                    onAddMedicineDismiss = { viewModel.dismissAddMedicineModal() },
+                    onAddMedicineConfirm = {  }
+                )
         }
 
 
     }
 
-    AddMedicineModal(
-        onDismissRequest = {},
-        onConfirm = {}
-    )
 
 }
 
 
 @Composable
-fun HomeScreenSuccess(contentPadding: PaddingValues, data: List<MedicineViewItem>) {
+fun HomeScreenSuccess(
+    contentPadding: PaddingValues,
+    data: List<MedicineViewItem>,
+    isAddMedicineModalVisible: Boolean,
+    onAddMedicineDismiss: () -> Unit = {},
+    onAddMedicineConfirm: (medicine: AddMedicineViewItem) -> Unit = {},
+) {
     LazyColumn(
         modifier = Modifier
             .padding(contentPadding),
@@ -124,6 +132,13 @@ fun HomeScreenSuccess(contentPadding: PaddingValues, data: List<MedicineViewItem
         items(data) {
             MedicineCard(data = it)
         }
+    }
+
+    if (isAddMedicineModalVisible) {
+        AddMedicineModal(
+            onDismissRequest = onAddMedicineDismiss,
+            onConfirm = onAddMedicineConfirm
+        )
     }
 }
 
