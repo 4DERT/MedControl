@@ -36,6 +36,7 @@ import androidx.room.Room
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
 import com.example.medcontrol.homescreen.modal.AddMedicineModal
+import com.example.medcontrol.homescreen.modal.AddMedicineViewItem
 
 
 data class HomeScreenViewItem(
@@ -53,7 +54,7 @@ fun HomeScreen() {
         Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "medicine1.db"
+            "medicine6.db"
         ).build()
     }
 
@@ -109,13 +110,10 @@ fun HomeScreen() {
         if (fabState.value.isAddMedicineModalVisible) {
             AddMedicineModal(
                 onDismissRequest = { viewModel.dismissAddMedicineModal() },
-                onConfirm = {  }
+                onConfirm = { viewModel.addMedicine(it) }
             )
         }
-
-
     }
-
 
 }
 
@@ -123,7 +121,7 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenSuccess(
     contentPadding: PaddingValues,
-    data: List<MedicineViewItem>
+    data: List<AddMedicineViewItem>
 ) {
     LazyColumn(
         modifier = Modifier

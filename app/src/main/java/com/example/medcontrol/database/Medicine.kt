@@ -3,26 +3,21 @@ package com.example.medcontrol.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import java.sql.Time
+import java.time.DayOfWeek
 import java.time.LocalTime
+import java.util.UUID
 
-data class TakeDate (
-    val hour: Int,
-    val minute: Int,
-    val isMonday: Boolean,
-    val isTuesday: Boolean,
-    val isWednesday: Boolean,
-    val isThursday: Boolean,
-    val isFriday: Boolean,
-    val isSaturday: Boolean,
-    val isSunday: Boolean
+@Entity(tableName = "medicines")
+data class MedicineEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val name: String,
+    @TypeConverters(Converters::class) val notifications: List<NotificationEntity>
 )
 
 @Entity
-@TypeConverters(Converters::class)
-data class Medicine(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
-    val name: String,
-    val dates: List<TakeDate>,
+data class NotificationEntity(
+    val selectedDays: Map<DayOfWeek, Boolean>,
+    val time: LocalTime,
+    val isExpended: Boolean,
+    @PrimaryKey val uuid: UUID
 )
