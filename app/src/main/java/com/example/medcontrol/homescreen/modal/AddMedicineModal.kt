@@ -72,7 +72,7 @@ fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (AddMedicineViewIt
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text("Add Medicine") },
+        title = { Text(context.getString(R.string.add_medicine)) },
         text = {
             Column {
                 OutlinedTextField(
@@ -138,12 +138,12 @@ fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (AddMedicineViewIt
             Button(onClick = {
                 onConfirm(state.value)
             }) {
-                Text("Confirm")
+                Text(context.getString(R.string.confirm))
             }
         },
         dismissButton = {
             Button(onClick = onDismissRequest) {
-                Text("Dismiss")
+                Text(context.getString(R.string.dismiss))
             }
         }
     )
