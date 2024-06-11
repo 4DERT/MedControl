@@ -35,7 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
-import com.example.medcontrol.homescreen.modal.AddMedicineModal
+import com.example.medcontrol.homescreen.modal.MedicineModal
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +104,7 @@ fun HomeScreen() {
         }
 
         if (fabState.value.isAddMedicineModalVisible) {
-            AddMedicineModal(
+            MedicineModal(
                 onDismissRequest = { viewModel.dismissAddMedicineModal() },
                 onConfirm = { viewModel.addMedicine(it) },
                 onUpdate = { viewModel.updateMedicine(it) },

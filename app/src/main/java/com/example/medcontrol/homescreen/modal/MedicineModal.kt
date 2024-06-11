@@ -48,7 +48,7 @@ import com.example.medcontrol.homescreen.NotificationViewItem
 import java.time.DayOfWeek
 
 @Composable
-fun AddMedicineModal(
+fun MedicineModal(
     data: MedicineViewItem? = null,
     onDismissRequest: () -> Unit,
     onConfirm: (MedicineViewItem) -> Unit,
@@ -57,7 +57,7 @@ fun AddMedicineModal(
 ) {
     val context = LocalContext.current
 
-    val viewModel = remember { AddMedicineModalViewModel(data) }
+    val viewModel = remember { MedicineModalViewModel(data) }
     val state = viewModel.state.collectAsState()
 
     AlertDialog(
@@ -72,7 +72,7 @@ fun AddMedicineModal(
             Column {
                 OutlinedTextField(
                     value = state.value.name,
-                    onValueChange = { viewModel.cardEvent(AddMedicineModalEvent.SetName(it)) },
+                    onValueChange = { viewModel.cardEvent(MedicineModalEvent.SetName(it)) },
                     label = { Text(context.getString(R.string.medicine_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(5.dp)
@@ -87,14 +87,14 @@ fun AddMedicineModal(
                             it,
                             onToggle = {
                                 viewModel.cardEvent(
-                                    AddMedicineModalEvent.ToggleNotification(
+                                    MedicineModalEvent.ToggleNotification(
                                         it.uuid
                                     )
                                 )
                             },
                             onDayClicked = { day, isChecked ->
                                 viewModel.cardEvent(
-                                    AddMedicineModalEvent.SetDay(
+                                    MedicineModalEvent.SetDay(
                                         it.uuid,
                                         day,
                                         isChecked
@@ -103,7 +103,7 @@ fun AddMedicineModal(
                             },
                             onDelete = {
                                 viewModel.cardEvent(
-                                    AddMedicineModalEvent.DeleteNotification(
+                                    MedicineModalEvent.DeleteNotification(
                                         it.uuid
                                     )
                                 )
@@ -118,7 +118,7 @@ fun AddMedicineModal(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    OutlinedIconButton(onClick = { viewModel.cardEvent(AddMedicineModalEvent.AddNotification) }) {
+                    OutlinedIconButton(onClick = { viewModel.cardEvent(MedicineModalEvent.Notification) }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = context.getString(R.string.add_notification)

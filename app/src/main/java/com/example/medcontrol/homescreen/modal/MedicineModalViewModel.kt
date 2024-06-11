@@ -10,11 +10,10 @@ import com.example.medcontrol.homescreen.NotificationViewItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.DayOfWeek
-import java.time.LocalTime
 import java.util.UUID
 
 
-class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
+class MedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
 
     val state = if (data == null) {
         MutableStateFlow(MedicineViewItem(id = 0, name = "", notifications = listOf()))
@@ -24,13 +23,13 @@ class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
 
     @SuppressLint("StateFlowValueCalledInComposition")
     @OptIn(ExperimentalMaterial3Api::class)
-    fun cardEvent(event: AddMedicineModalEvent) {
+    fun cardEvent(event: MedicineModalEvent) {
         when (event) {
-            is AddMedicineModalEvent.SetName -> {
+            is MedicineModalEvent.SetName -> {
                 state.update { it.copy(name = event.name) }
             }
 
-            is AddMedicineModalEvent.ToggleNotification -> {
+            is MedicineModalEvent.ToggleNotification -> {
                 state.update {
                     it.copy(notifications = it.notifications.map { notification ->
                         if (notification.uuid == event.uuid) {
@@ -43,7 +42,7 @@ class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
                 }
             }
 
-            is AddMedicineModalEvent.AddNotification -> {
+            is MedicineModalEvent.Notification -> {
                 val updatedNotifications = state.value.notifications + NotificationViewItem(
                     selectedDays = mapOf(
                         DayOfWeek.MONDAY to false,
@@ -65,7 +64,7 @@ class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
                 }
             }
 
-            is AddMedicineModalEvent.DeleteNotification -> {
+            is MedicineModalEvent.DeleteNotification -> {
                 state.update { currentState ->
                     currentState.copy(
                         notifications = currentState.notifications.filter { it.uuid != event.uuid }
@@ -73,7 +72,7 @@ class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
                 }
             }
 
-            is AddMedicineModalEvent.SetDay -> {
+            is MedicineModalEvent.SetDay -> {
                 state.update {
                     it.copy(notifications = it.notifications.map { notification ->
                         if (notification.uuid == event.uuid) {
