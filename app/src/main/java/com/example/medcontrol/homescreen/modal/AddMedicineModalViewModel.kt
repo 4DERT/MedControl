@@ -36,7 +36,7 @@ class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
                         if (notification.uuid == event.uuid) {
                             notification.copy(isExpended = !notification.isExpended)
                         } else {
-                            notification
+                            notification.copy(isExpended = false)
                         }
                     }
                     )
