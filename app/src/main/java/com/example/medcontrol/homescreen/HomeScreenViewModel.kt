@@ -130,7 +130,7 @@ class HomeScreenViewModel(
 //    }
 
     fun showAddMedicineModal() {
-        fabState.update { it.copy(isAddMedicineModalVisible = true) }
+        fabState.update { it.copy(isAddMedicineModalVisible = true, medicineToEdit = null) }
     }
 
     fun dismissAddMedicineModal() {
