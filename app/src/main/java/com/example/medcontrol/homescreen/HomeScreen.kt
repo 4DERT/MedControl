@@ -105,7 +105,8 @@ fun HomeScreen() {
         if (fabState.value.isAddMedicineModalVisible) {
             AddMedicineModal(
                 onDismissRequest = { viewModel.dismissAddMedicineModal() },
-                onConfirm = { viewModel.addMedicine(it) }
+                onConfirm = { viewModel.addMedicine(it) },
+                onHideDialog = {viewModel.hideAddMedicineModal()}
             )
         }
     }

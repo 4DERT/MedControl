@@ -128,6 +128,10 @@ class HomeScreenViewModel(
     }
 
     fun dismissAddMedicineModal() {
+        hideAddMedicineModal()
+    }
+
+    fun hideAddMedicineModal() {
         fabState.update { it.copy(isAddMedicineModalVisible = false) }
     }
 

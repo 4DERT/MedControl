@@ -47,7 +47,11 @@ import com.example.medcontrol.homescreen.NotificationViewItem
 import java.time.DayOfWeek
 
 @Composable
-fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (MedicineViewItem) -> Unit) {
+fun AddMedicineModal(
+    onDismissRequest: () -> Unit,
+    onConfirm: (MedicineViewItem) -> Unit,
+    onHideDialog: () -> Unit
+) {
     val context = LocalContext.current
 
     val viewModel = remember { AddMedicineModalViewModel() }
@@ -120,6 +124,7 @@ fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (MedicineViewItem)
         confirmButton = {
             Button(onClick = {
                 onConfirm(state.value)
+                onHideDialog()
             }) {
                 Text(context.getString(R.string.confirm))
             }
