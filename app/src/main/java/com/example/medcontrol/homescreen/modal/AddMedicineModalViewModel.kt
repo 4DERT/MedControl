@@ -14,9 +14,13 @@ import java.time.LocalTime
 import java.util.UUID
 
 
-class AddMedicineModalViewModel : ViewModel() {
+class AddMedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
 
-    val state = MutableStateFlow(MedicineViewItem(name = "", notifications = listOf()))
+    val state = if (data == null) {
+        MutableStateFlow(MedicineViewItem(id = 0, name = "", notifications = listOf()))
+    } else {
+        MutableStateFlow(data)
+    }
 
     @SuppressLint("StateFlowValueCalledInComposition")
     @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +54,6 @@ class AddMedicineModalViewModel : ViewModel() {
                         DayOfWeek.SATURDAY to false,
                         DayOfWeek.SUNDAY to false,
                     ),
-                    time = LocalTime.now(),
                     isExpended = true,
                     uuid = UUID.randomUUID(),
                     timeState = TimePickerState(0, 0, true),

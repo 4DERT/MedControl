@@ -1,5 +1,6 @@
 package com.example.medcontrol.homescreen
 
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 
 class HomeScreenViewModel(
@@ -43,14 +45,18 @@ class HomeScreenViewModel(
     private fun makeList(dbItems: List<MedicineEntity>): List<MedicineViewItem> {
         return dbItems.map { medicineEntity ->
             MedicineViewItem(
+                id = medicineEntity.id,
                 name = medicineEntity.name,
                 notifications = medicineEntity.notifications.map { notificationEntity ->
                     NotificationViewItem(
                         selectedDays = notificationEntity.selectedDays,
-                        time = notificationEntity.time,
-                        isExpended = notificationEntity.isExpended,
+                        isExpended = false,
                         uuid = notificationEntity.uuid,
-                        timeState = TimePickerState(0, 0, true),
+                        timeState = TimePickerState(
+                            notificationEntity.hour,
+                            notificationEntity.minute,
+                            true
+                        ),
                         scrollState = ScrollState(0)
                     )
                 }
@@ -142,18 +148,32 @@ class HomeScreenViewModel(
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     private fun toMedicineEntity(viewItem: MedicineViewItem): MedicineEntity {
-        return MedicineEntity(
+        val entity =  MedicineEntity(
+            id = viewItem.id,
             name = viewItem.name,
             notifications = viewItem.notifications.map { notificationViewItem ->
                 NotificationEntity(
                     selectedDays = notificationViewItem.selectedDays,
-                    time = notificationViewItem.time,
-                    isExpended = notificationViewItem.isExpended,
+                    hour = notificationViewItem.timeState.hour,
+                    minute = notificationViewItem.timeState.minute,
                     uuid = notificationViewItem.uuid
                 )
             }
         )
+
+        return entity
+    }
+
+    fun showMedicineDetails(item: MedicineViewItem) {
+        fabState.update { it.copy(isAddMedicineModalVisible = true, medicineToEdit = item) }
+    }
+
+    fun updateMedicine(item: MedicineViewItem) {
+        viewModelScope.launch {
+            dao.updateMedicine(toMedicineEntity(item))
+        }
     }
 
 }

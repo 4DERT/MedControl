@@ -17,7 +17,7 @@ data class MedicineEntity(
 @Entity
 data class NotificationEntity(
     val selectedDays: Map<DayOfWeek, Boolean>,
-    val time: LocalTime,
-    val isExpended: Boolean,
+    val hour: Int,
+    val minute: Int,
     @PrimaryKey val uuid: UUID
 )

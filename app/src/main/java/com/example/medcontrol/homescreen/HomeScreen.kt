@@ -49,7 +49,7 @@ fun HomeScreen() {
         Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "medicine6.db"
+            "medicine7.db"
         ).build()
     }
 
@@ -99,6 +99,7 @@ fun HomeScreen() {
                 HomeScreenSuccess(
                     innerPadding,
                     listState.data,
+                    onClick = { viewModel.showMedicineDetails(it) }
                 )
         }
 
@@ -106,7 +107,9 @@ fun HomeScreen() {
             AddMedicineModal(
                 onDismissRequest = { viewModel.dismissAddMedicineModal() },
                 onConfirm = { viewModel.addMedicine(it) },
-                onHideDialog = {viewModel.hideAddMedicineModal()}
+                onUpdate = { viewModel.updateMedicine(it) },
+                onHideDialog = { viewModel.hideAddMedicineModal() },
+                data = fabState.value.medicineToEdit
             )
         }
     }
@@ -117,7 +120,8 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenSuccess(
     contentPadding: PaddingValues,
-    data: List<MedicineViewItem>
+    data: List<MedicineViewItem>,
+    onClick: (MedicineViewItem) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -125,7 +129,7 @@ fun HomeScreenSuccess(
 
         ) {
         items(data) {
-            MedicineCard(data = it)
+            MedicineCard(data = it, onClick = onClick)
         }
     }
 }

@@ -29,10 +29,11 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MedicineCard(
-    data: MedicineViewItem
+    data: MedicineViewItem,
+    onClick: (MedicineViewItem) -> Unit,
 ) {
     Card(
-        onClick = { /*TODO*/ },
+        onClick = { onClick(data) },
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 8.dp)
             .fillMaxWidth()
@@ -52,7 +53,7 @@ fun MedicineCard(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
-                Text(text = "NEXT TAKE TODO")
+                Text(text = "NEXT TAKE TODO ${data.id}" )
             }
 
         }

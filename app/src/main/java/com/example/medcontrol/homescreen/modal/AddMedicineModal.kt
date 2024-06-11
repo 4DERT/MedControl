@@ -48,13 +48,15 @@ import java.time.DayOfWeek
 
 @Composable
 fun AddMedicineModal(
+    data: MedicineViewItem? = null,
     onDismissRequest: () -> Unit,
     onConfirm: (MedicineViewItem) -> Unit,
+    onUpdate: (MedicineViewItem) -> Unit,
     onHideDialog: () -> Unit
 ) {
     val context = LocalContext.current
 
-    val viewModel = remember { AddMedicineModalViewModel() }
+    val viewModel = remember { AddMedicineModalViewModel(data) }
     val state = viewModel.state.collectAsState()
 
     AlertDialog(
@@ -123,7 +125,10 @@ fun AddMedicineModal(
         },
         confirmButton = {
             Button(onClick = {
-                onConfirm(state.value)
+                if(data == null)
+                    onConfirm(state.value)
+                else
+                    onUpdate(state.value)
                 onHideDialog()
             }) {
                 Text(context.getString(R.string.confirm))
