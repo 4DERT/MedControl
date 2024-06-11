@@ -4,7 +4,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -63,7 +62,12 @@ fun AddMedicineModal(
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(context.getString(R.string.add_medicine)) },
+        title = {
+            if (data == null)
+                Text(context.getString(R.string.add_medicine))
+            else
+                Text(context.getString(R.string.update_medicine))
+        },
         text = {
             Column {
                 OutlinedTextField(
@@ -128,7 +132,7 @@ fun AddMedicineModal(
         },
         confirmButton = {
             Button(onClick = {
-                if(data == null)
+                if (data == null)
                     onConfirm(state.value)
                 else
                     onUpdate(state.value)

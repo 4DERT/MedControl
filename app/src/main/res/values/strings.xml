@@ -14,4 +14,5 @@
     <string name="add_medicine">Add medicine</string>
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
+    <string name="update_medicine">Update medicine</string>
 </resources>
