@@ -8,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.medcontrol.database.MedicineDao
 import com.example.medcontrol.database.MedicineEntity
 import com.example.medcontrol.database.NotificationEntity
-import com.example.medcontrol.homescreen.modal.AddMedicineViewItem
-import com.example.medcontrol.homescreen.modal.NotificationViewItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,9 +40,9 @@ class HomeScreenViewModel(
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
-    private fun makeList(dbItems: List<MedicineEntity>): List<AddMedicineViewItem> {
+    private fun makeList(dbItems: List<MedicineEntity>): List<MedicineViewItem> {
         return dbItems.map { medicineEntity ->
-            AddMedicineViewItem(
+            MedicineViewItem(
                 name = medicineEntity.name,
                 notifications = medicineEntity.notifications.map { notificationEntity ->
                     NotificationViewItem(
@@ -133,14 +131,14 @@ class HomeScreenViewModel(
         fabState.update { it.copy(isAddMedicineModalVisible = false) }
     }
 
-    fun addMedicine(medicine: AddMedicineViewItem) {
+    fun addMedicine(medicine: MedicineViewItem) {
         viewModelScope.launch {
             val medicineEntity = toMedicineEntity(medicine)
             dao.insertMedicine(medicineEntity)
         }
     }
 
-    private fun toMedicineEntity(viewItem: AddMedicineViewItem): MedicineEntity {
+    private fun toMedicineEntity(viewItem: MedicineViewItem): MedicineEntity {
         return MedicineEntity(
             name = viewItem.name,
             notifications = viewItem.notifications.map { notificationViewItem ->

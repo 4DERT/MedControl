@@ -13,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.medcontrol.homescreen.modal.AddMedicineViewItem
-import java.time.LocalTime
 
 //data class TakeDateViewItem(
 //    val hour: Int,
@@ -31,7 +29,7 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MedicineCard(
-    data: AddMedicineViewItem
+    data: MedicineViewItem
 ) {
     Card(
         onClick = { /*TODO*/ },

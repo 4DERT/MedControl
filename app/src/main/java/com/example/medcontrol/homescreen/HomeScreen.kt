@@ -36,12 +36,7 @@ import androidx.room.Room
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
 import com.example.medcontrol.homescreen.modal.AddMedicineModal
-import com.example.medcontrol.homescreen.modal.AddMedicineViewItem
 
-
-data class HomeScreenViewItem(
-    val isAddMedicineModalVisible: Boolean,
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,7 +116,7 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenSuccess(
     contentPadding: PaddingValues,
-    data: List<AddMedicineViewItem>
+    data: List<MedicineViewItem>
 ) {
     LazyColumn(
         modifier = Modifier

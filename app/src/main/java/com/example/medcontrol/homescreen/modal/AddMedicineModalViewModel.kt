@@ -5,6 +5,8 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
 import androidx.lifecycle.ViewModel
+import com.example.medcontrol.homescreen.MedicineViewItem
+import com.example.medcontrol.homescreen.NotificationViewItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.DayOfWeek
@@ -14,7 +16,7 @@ import java.util.UUID
 
 class AddMedicineModalViewModel : ViewModel() {
 
-    val state = MutableStateFlow(AddMedicineViewItem(name = "", notifications = listOf()))
+    val state = MutableStateFlow(MedicineViewItem(name = "", notifications = listOf()))
 
     @SuppressLint("StateFlowValueCalledInComposition")
     @OptIn(ExperimentalMaterial3Api::class)

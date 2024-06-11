@@ -4,7 +4,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,27 +42,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.medcontrol.R
+import com.example.medcontrol.homescreen.MedicineViewItem
+import com.example.medcontrol.homescreen.NotificationViewItem
 import java.time.DayOfWeek
-import java.time.LocalTime
-import java.util.UUID
-
-@OptIn(ExperimentalMaterial3Api::class)
-data class NotificationViewItem(
-    val selectedDays: Map<DayOfWeek, Boolean>,
-    val time: LocalTime,
-    val isExpended: Boolean,
-    val uuid: UUID,
-    val timeState: TimePickerState,
-    val scrollState: ScrollState
-)
-
-data class AddMedicineViewItem(
-    val name: String,
-    val notifications: List<NotificationViewItem>,
-)
 
 @Composable
-fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (AddMedicineViewItem) -> Unit) {
+fun AddMedicineModal(onDismissRequest: () -> Unit, onConfirm: (MedicineViewItem) -> Unit) {
     val context = LocalContext.current
 
     val viewModel = remember { AddMedicineModalViewModel() }
