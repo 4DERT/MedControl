@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MedControl</string>
+    <string name="empty_list">Brawo! jesteś zdrowy.</string>
+    <string name="notification">Powiadomienie</string>
+    <string name="medicine_name">Nazwa leku</string>
+    <string name="add_notification">Dodaj powiadomienie</string>
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">W</string>
+    <string name="wednesday_short">Ś</string>
+    <string name="thursday_short">C</string>
+    <string name="friday_short">P</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">N</string>
+    <string name="add_medicine">Dodaj lek</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="dismiss">Anuluj</string>
+    <string name="update_medicine">Edytuj lek</string>
+    <string name="set_time">Ustaw czas</string>
+    <string name="select_days">Wybierz dni</string>
+</resources>

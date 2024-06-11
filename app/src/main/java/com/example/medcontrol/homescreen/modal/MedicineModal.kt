@@ -236,13 +236,13 @@ private fun ShowTimeSetter(
     ) {
 
 
-        Text("Set Time")
+        Text(context.getString(R.string.set_time))
         TimeInput(
             state = state.timeState,
             modifier = Modifier.padding(16.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Select Days")
+        Text(context.getString(R.string.select_days))
         Row(
             modifier = Modifier.horizontalScroll(state = state.scrollState)
         ) {
