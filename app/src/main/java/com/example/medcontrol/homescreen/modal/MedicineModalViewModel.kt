@@ -43,6 +43,7 @@ class MedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
             }
 
             is MedicineModalEvent.Notification -> {
+                val uuid = UUID.randomUUID()
                 val updatedNotifications = state.value.notifications + NotificationViewItem(
                     selectedDays = mapOf(
                         DayOfWeek.MONDAY to false,
@@ -53,8 +54,8 @@ class MedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
                         DayOfWeek.SATURDAY to false,
                         DayOfWeek.SUNDAY to false,
                     ),
-                    isExpended = true,
-                    uuid = UUID.randomUUID(),
+                    isExpended = false,
+                    uuid = uuid,
                     timeState = TimePickerState(0, 0, true),
                     scrollState = ScrollState(0)
                 )
@@ -62,6 +63,9 @@ class MedicineModalViewModel(data: MedicineViewItem? = null) : ViewModel() {
                 state.update {
                     it.copy(notifications = updatedNotifications)
                 }
+
+                // hide all notifications
+                cardEvent(MedicineModalEvent.ToggleNotification(uuid))
             }
 
             is MedicineModalEvent.DeleteNotification -> {
