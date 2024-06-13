@@ -1,5 +1,6 @@
 package com.example.medcontrol.homescreen.modal
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -17,8 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +34,9 @@ import androidx.compose.material3.TimeInput
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -149,6 +152,7 @@ fun MedicineModal(
     )
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun ExpendableNotificationCard(
@@ -162,6 +166,8 @@ private fun ExpendableNotificationCard(
     val rotationState by animateFloatAsState(
         targetValue = if (state.isExpended) 180f else 0f, label = ""
     )
+
+    var notificationTitle by remember { mutableStateOf("") }
 
     Row {
 
@@ -177,41 +183,47 @@ private fun ExpendableNotificationCard(
             shape = RoundedCornerShape(5.dp)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = (context.getString(R.string.notification)),
+
+                IconButton(
+                    onClick = { onToggle() },
                     modifier = Modifier
-                        .weight(6f)
-                        .padding(8.dp),
+                        .rotate(rotationState)
+                        .padding(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Drop-Down Arrow"
+                    )
+                }
+
+                Text(
+                    text = String.format(
+                        "%s: %02d:%02d",
+                        context.getString(R.string.notification),
+                        state.timeState.hour,
+                        state.timeState.minute
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold
                 )
 
+                Spacer(Modifier.weight(1f))
+
                 // Delete notification button
                 IconButton(
                     onClick = { onDelete() },
-                    modifier = Modifier
-                        .weight(1f)
+
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete"
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close"
                     )
                 }
 
-                IconButton(
-                    onClick = { onToggle() },
-                    modifier = Modifier
-                        .weight(1f)
-                        .rotate(rotationState)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Drop-Down Arrow"
-                    )
-                }
             }
 
             if (state.isExpended) {
@@ -223,6 +235,7 @@ private fun ExpendableNotificationCard(
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun ShowTimeSetter(
