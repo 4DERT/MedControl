@@ -10,9 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.medcontrol.R
 
 //data class TakeDateViewItem(
 //    val hour: Int,
@@ -32,6 +34,8 @@ fun MedicineCard(
     data: MedicineViewItem,
     onClick: (MedicineViewItem) -> Unit,
 ) {
+    val context = LocalContext.current
+
     Card(
         onClick = { onClick(data) },
         modifier = Modifier
@@ -53,7 +57,10 @@ fun MedicineCard(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
-                Text(text = "NEXT TAKE TODO ${data.id}" )
+                if(data.nextTake != null)
+                    Text(text = data.nextTake )
+                else
+                    Text(text = context.getString(R.string.no_upcoming_notifications) )
             }
 
         }

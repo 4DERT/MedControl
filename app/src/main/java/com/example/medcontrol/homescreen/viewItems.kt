@@ -19,6 +19,7 @@ data class MedicineViewItem(
     val id: Long,
     val name: String,
     val notifications: List<NotificationViewItem>,
+    val nextTake: String? = null
 )
 
 data class HomeScreenViewItem(
