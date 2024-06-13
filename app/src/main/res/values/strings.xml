@@ -18,4 +18,6 @@
     <string name="set_time">Set time</string>
     <string name="select_days">Select days</string>
     <string name="no_upcoming_notifications">No upcoming notifications</string>
+    <string name="time_for_medicine">Time for medicine!</string>
+    <string name="time_for_medicine_text">You should take %s.</string>
 </resources>

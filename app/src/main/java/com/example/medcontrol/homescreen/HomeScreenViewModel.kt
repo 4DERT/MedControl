@@ -1,11 +1,21 @@
 package com.example.medcontrol.homescreen
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.Application
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.medcontrol.AlarmReceiver
 import com.example.medcontrol.database.MedicineDao
 import com.example.medcontrol.database.MedicineEntity
 import com.example.medcontrol.database.NotificationEntity
@@ -18,12 +28,15 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
+import java.util.Calendar
 
 
 class HomeScreenViewModel(
     private val dao: MedicineDao,
-) : ViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val appContext: Context = getApplication<Application>().applicationContext
 
     val state = MutableStateFlow<ItemsListState>(ItemsListState.Loading)
     val fabState = MutableStateFlow(HomeScreenViewItem(isAddMedicineModalVisible = false))
@@ -117,6 +130,8 @@ class HomeScreenViewModel(
             val medicineEntity = toMedicineEntity(medicine)
             dao.insertMedicine(medicineEntity)
         }
+
+        scheduleNotification(appContext, medicine)
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -146,5 +161,58 @@ class HomeScreenViewModel(
             dao.updateMedicine(toMedicineEntity(item))
         }
     }
+
+    @SuppressLint("ScheduleExactAlarm")
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun scheduleNotification(context: Context, medicine: MedicineViewItem) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        medicine.notifications.forEach { notification ->
+            notification.selectedDays.forEach { (dayOfWeek, isSelected) ->
+                if (isSelected) {
+
+                    val uuid = notification.uuid.hashCode() + dayOfWeek.value
+
+                    val intent = Intent(context, AlarmReceiver::class.java).apply {
+                        putExtra("notification_id", uuid)
+                        putExtra("medicine_name", medicine.name)
+                    }
+
+                    val pendingIntent = PendingIntent.getBroadcast(
+                        context,
+                        uuid,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+
+                    val calendar = Calendar.getInstance().apply {
+                        timeInMillis = System.currentTimeMillis()
+                        set(Calendar.HOUR_OF_DAY, notification.timeState.hour)
+                        set(Calendar.MINUTE, notification.timeState.minute)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                        set(Calendar.DAY_OF_WEEK, (dayOfWeek.value % 7) + 1) // Adjusting the day of the week
+
+                        // If the set time is before the current time, schedule it for the next week
+                        if (before(Calendar.getInstance())) {
+                            add(Calendar.WEEK_OF_YEAR, 1)
+                        }
+                    }
+
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent
+                    )
+
+                }
+            }
+        }
+    }
+
+
+
+
+
 
 }

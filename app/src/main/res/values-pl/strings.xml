@@ -18,4 +18,7 @@
     <string name="update_medicine">Edytuj lek</string>
     <string name="set_time">Ustaw czas</string>
     <string name="select_days">Wybierz dni</string>
+    <string name="no_upcoming_notifications">Brak nadchodzących powiadomień</string>
+    <string name="time_for_medicine">Czas na lekarstwo!</string>
+    <string name="time_for_medicine_text">Powinieneś wziąć %s.</string>
 </resources>

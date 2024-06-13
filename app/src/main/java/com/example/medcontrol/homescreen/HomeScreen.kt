@@ -1,5 +1,11 @@
 package com.example.medcontrol.homescreen
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.Application
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,11 +44,37 @@ import com.example.medcontrol.database.AppDatabase
 import com.example.medcontrol.homescreen.modal.MedicineModal
 
 
+@SuppressLint("ScheduleExactAlarm")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    ///// TEMPORARY
+
+//    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//    val intent = Intent(context, AlarmReceiver::class.java)
+//
+//    val pendingIntent = PendingIntent.getBroadcast(
+//        context,
+//        0,
+//        intent,
+//        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//    )
+//
+//    val calendar = Calendar.getInstance().apply {
+//        set(Calendar.HOUR_OF_DAY, 19)
+//        set(Calendar.MINUTE, 57)
+//        set(Calendar.SECOND, 0)
+//        if (before(Calendar.getInstance())) {
+//            add(Calendar.DAY_OF_MONTH, 1)
+//        }
+//    }
+//
+//    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
+    //////
 
     // creating database
     val db by lazy {
@@ -53,15 +85,19 @@ fun HomeScreen() {
         ).build()
     }
 
+    val application = context.applicationContext as Application
+
     val viewModel = viewModel<HomeScreenViewModel>(
         factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return HomeScreenViewModel(
                     dao = db.medicineDao(),
+                    application = application
                 ) as T
             }
         }
     )
+
     val state = viewModel.state.collectAsState()
     val fabState = viewModel.fabState.collectAsState()
 
