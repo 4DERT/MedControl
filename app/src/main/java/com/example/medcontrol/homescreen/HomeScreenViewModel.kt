@@ -162,6 +162,12 @@ class HomeScreenViewModel(
         }
     }
 
+    fun deleteMedicine(item: MedicineViewItem) {
+        viewModelScope.launch {
+            dao.deleteMedicine(item.id)
+        }
+    }
+
     @SuppressLint("ScheduleExactAlarm")
     @OptIn(ExperimentalMaterial3Api::class)
     fun scheduleNotification(context: Context, medicine: MedicineViewItem) {
@@ -209,10 +215,5 @@ class HomeScreenViewModel(
             }
         }
     }
-
-
-
-
-
 
 }

@@ -20,4 +20,7 @@ interface MedicineDao {
 
     @Update
     suspend fun updateMedicine(medicine: MedicineEntity)
+
+    @Query("DELETE FROM medicines WHERE id = :medicineId")
+    suspend fun deleteMedicine(medicineId: Long)
 }
