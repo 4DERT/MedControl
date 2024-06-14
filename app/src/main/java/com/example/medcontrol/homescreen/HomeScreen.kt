@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -16,7 +17,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.room.Room
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.FractionalThreshold
@@ -52,13 +61,14 @@ import androidx.wear.compose.material.swipeable
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
 import com.example.medcontrol.homescreen.modal.MedicineModal
+import com.example.medcontrol.router.Screen
 import kotlin.math.roundToInt
 
 
 @SuppressLint("ScheduleExactAlarm")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -106,6 +116,44 @@ fun HomeScreen() {
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
+        },
+
+        bottomBar = {
+            BottomAppBar(
+                actions = {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { navController.navigate(Screen.Home.route) }) {
+                            Icon(
+                                imageVector = Icons.Default.Home,
+                                contentDescription = "Home"
+                            )
+                        }
+
+                        IconButton(onClick = { navController.navigate(Screen.Graph.route) }) {
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = "Graph"
+                            )
+                        }
+
+                        IconButton(onClick = { navController.navigate(Screen.Info.route) }) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Info"
+                            )
+                        }
+                    }
+
+
+                }
+            )
         }
 
     ) { innerPadding ->
