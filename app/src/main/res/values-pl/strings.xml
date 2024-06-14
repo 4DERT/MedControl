@@ -23,4 +23,7 @@
     <string name="time_for_medicine_text">Powinieneś wziąć %s.</string>
     <string name="empty_list_emoji">:)</string>
     <string name="info_text">Aplikacja \"Med Control\" ma na celu ułatwienie zarządzania lekami i przypomnieniami o ich przyjmowaniu. Użytkownicy mogą dodawać nowe leki, ustawiać przypomnienia oraz śledzić historię przyjmowania leków i parametrów zdrowia. Aplikacja pomaga w regularnym i zgodnym z zaleceniami przyjmowaniu leków.</string>
+    <string name="home_page">Główna</string>
+    <string name="graph_page">Wykresy</string>
+    <string name="info_page">O aplikacji</string>
 </resources>

@@ -23,4 +23,7 @@
     <string name="empty_list_emoji">:(</string>
     <string name="info_text">Description: The \"Med Control\" application aims to facilitate the management of medications and reminders for taking them. Users can add new medications, set reminders, and track the history of medication intake and health parameters. The application helps ensure regular and compliant medication intake according to the recommendations.</string>
     <string name="info_authors">-</string>
+    <string name="home_page">Home</string>
+    <string name="graph_page">Graph</string>
+    <string name="info_page">Info</string>
 </resources>

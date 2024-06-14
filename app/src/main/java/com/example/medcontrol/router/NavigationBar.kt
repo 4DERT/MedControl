@@ -17,7 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
+import com.example.medcontrol.R
 
 @Composable
 fun MyNavigationBar() {
@@ -26,19 +28,19 @@ fun MyNavigationBar() {
 
     val items = listOf(
         BottomNavigationItem(
-            title = "Home",
+            title = stringResource(id = R.string.home_page),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
             route = Screen.Home.route
         ),
         BottomNavigationItem(
-            title = "Graph",
+            title = stringResource(id = R.string.graph_page),
             selectedIcon = Icons.Filled.Favorite,
             unselectedIcon = Icons.Outlined.FavoriteBorder,
             route = Screen.Graph.route
         ),
         BottomNavigationItem(
-            title = "Info",
+            title = stringResource(id = R.string.info_page),
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Outlined.Info,
             route = Screen.Info.route
