@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.medcontrol.R
+import com.example.medcontrol.ui.theme.playwriteFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +41,10 @@ fun InfoScreen(padding: PaddingValues) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.app_name))
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        fontFamily = playwriteFontFamily
+                    )
                 }, scrollBehavior = scrollBehavior
             )
         },

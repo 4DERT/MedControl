@@ -55,6 +55,7 @@ import androidx.wear.compose.material.swipeable
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
 import com.example.medcontrol.homescreen.modal.MedicineModal
+import com.example.medcontrol.ui.theme.playwriteFontFamily
 import kotlin.math.roundToInt
 
 
@@ -98,7 +99,10 @@ fun HomeScreen(padding: PaddingValues) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.app_name))
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        fontFamily = playwriteFontFamily
+                    )
                 }, scrollBehavior = scrollBehavior
             )
         },
