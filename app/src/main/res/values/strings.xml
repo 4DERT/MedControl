@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MedControl</string>
+    <string name="app_name">Med Control</string>
     <string name="empty_list">You look like a healthy person, please get sick so I can get some money.</string>
     <string name="notification">Notification</string>
     <string name="medicine_name">Medicine name</string>
@@ -21,4 +21,6 @@
     <string name="time_for_medicine">Time for medicine!</string>
     <string name="time_for_medicine_text">You should take %s.</string>
     <string name="empty_list_emoji">:(</string>
+    <string name="info_text">Description: The \"Med Control\" application aims to facilitate the management of medications and reminders for taking them. Users can add new medications, set reminders, and track the history of medication intake and health parameters. The application helps ensure regular and compliant medication intake according to the recommendations.</string>
+    <string name="info_authors">-</string>
 </resources>

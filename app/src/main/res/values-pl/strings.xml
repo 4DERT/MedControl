@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MedControl</string>
+    <string name="app_name">Med Control</string>
     <string name="empty_list">Brawo! jesteś zdrowy.</string>
     <string name="notification">Powiadomienie</string>
     <string name="medicine_name">Nazwa leku</string>
@@ -22,4 +22,5 @@
     <string name="time_for_medicine">Czas na lekarstwo!</string>
     <string name="time_for_medicine_text">Powinieneś wziąć %s.</string>
     <string name="empty_list_emoji">:)</string>
+    <string name="info_text">Aplikacja \"Med Control\" ma na celu ułatwienie zarządzania lekami i przypomnieniami o ich przyjmowaniu. Użytkownicy mogą dodawać nowe leki, ustawiać przypomnienia oraz śledzić historię przyjmowania leków i parametrów zdrowia. Aplikacja pomaga w regularnym i zgodnym z zaleceniami przyjmowaniu leków.</string>
 </resources>

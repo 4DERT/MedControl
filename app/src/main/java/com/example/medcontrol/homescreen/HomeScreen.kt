@@ -8,23 +8,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,7 +47,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.room.Room
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.FractionalThreshold
@@ -61,117 +55,71 @@ import androidx.wear.compose.material.swipeable
 import com.example.medcontrol.R
 import com.example.medcontrol.database.AppDatabase
 import com.example.medcontrol.homescreen.modal.MedicineModal
-import com.example.medcontrol.router.Screen
 import kotlin.math.roundToInt
 
 
 @SuppressLint("ScheduleExactAlarm")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(padding: PaddingValues) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     // creating database
     val db by lazy {
         Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "medicine7.db"
+            context, AppDatabase::class.java, "medicine7.db"
         ).build()
     }
 
     val application = context.applicationContext as Application
 
-    val viewModel = viewModel<HomeScreenViewModel>(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeScreenViewModel(
-                    dao = db.medicineDao(),
-                    application = application
-                ) as T
-            }
+    val viewModel = viewModel<HomeScreenViewModel>(factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HomeScreenViewModel(
+                dao = db.medicineDao(), application = application
+            ) as T
         }
-    )
+    })
 
     val state = viewModel.state.collectAsState()
     val fabState = viewModel.fabState.collectAsState()
 
+    val paddingValues = WindowInsets.navigationBars.asPaddingValues()
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .padding(
+                bottom = padding.calculateBottomPadding() - paddingValues.calculateBottomPadding()
+            ),
+
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = context.getString(R.string.app_name))
-                },
-                scrollBehavior = scrollBehavior
+                    Text(text = stringResource(R.string.app_name))
+                }, scrollBehavior = scrollBehavior
             )
         },
 
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.showAddMedicineModal() }
-            ) {
+            FloatingActionButton(onClick = { viewModel.showAddMedicineModal() }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         },
 
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(onClick = { navController.navigate(Screen.Home.route) }) {
-                            Icon(
-                                imageVector = Icons.Default.Home,
-                                contentDescription = "Home"
-                            )
-                        }
-
-                        IconButton(onClick = { navController.navigate(Screen.Graph.route) }) {
-                            Icon(
-                                imageVector = Icons.Default.Favorite,
-                                contentDescription = "Graph"
-                            )
-                        }
-
-                        IconButton(onClick = { navController.navigate(Screen.Info.route) }) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Info"
-                            )
-                        }
-                    }
-
-
-                }
-            )
-        }
-
-    ) { innerPadding ->
+        ) { innerPadding ->
 
         when (val listState = state.value) {
-            is ItemsListState.Loading ->
-                HomeScreenLoading(innerPadding)
+            is ItemsListState.Loading -> HomeScreenLoading(innerPadding)
 
-            is ItemsListState.Empty ->
-                HomeScreenEmpty(innerPadding)
+            is ItemsListState.Empty -> HomeScreenEmpty(innerPadding)
 
-            is ItemsListState.Success ->
-                HomeScreenSuccess(
-                    innerPadding,
-                    listState.data,
-                    onClick = { viewModel.showMedicineDetails(it) },
-                    onDelete = { viewModel.deleteMedicine(it) }
-                )
+            is ItemsListState.Success -> HomeScreenSuccess(innerPadding,
+                listState.data,
+                onClick = { viewModel.showMedicineDetails(it) },
+                onDelete = { viewModel.deleteMedicine(it) })
         }
 
         if (fabState.value.isAddMedicineModalVisible) {
@@ -185,6 +133,7 @@ fun HomeScreen(navController: NavHostController) {
         }
     }
 
+
 }
 
 
@@ -197,8 +146,7 @@ fun HomeScreenSuccess(
     onDelete: (MedicineViewItem) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier
-            .padding(contentPadding),
+        modifier = Modifier.padding(contentPadding),
     ) {
         items(data) { item ->
             val swipeableState = SwipeableState(initialValue = 0)
@@ -225,8 +173,7 @@ fun HomeScreenSuccess(
                     IconButton(
                         onClick = {
                             onDelete(item)
-                        },
-                        modifier = Modifier.align(Alignment.CenterEnd)
+                        }, modifier = Modifier.align(Alignment.CenterEnd)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
@@ -234,12 +181,14 @@ fun HomeScreenSuccess(
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
-                        .fillMaxWidth()
-                        .background(Color.Transparent)
-                ) {
+                Box(modifier = Modifier
+                    .offset {
+                        IntOffset(
+                            swipeableState.offset.value.roundToInt(), 0
+                        )
+                    }
+                    .fillMaxWidth()
+                    .background(Color.Transparent)) {
                     MedicineCard(data = item, onClick = onClick)
                 }
             }
@@ -266,8 +215,7 @@ fun HomeScreenEmpty(contentPadding: PaddingValues) {
         )
 
         Text(
-            modifier = Modifier
-                .padding(start = 32.dp, end = 32.dp),
+            modifier = Modifier.padding(start = 32.dp, end = 32.dp),
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             text = stringResource(id = R.string.empty_list)
