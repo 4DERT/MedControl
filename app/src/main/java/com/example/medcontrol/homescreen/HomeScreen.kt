@@ -238,7 +238,7 @@ fun HomeScreenEmpty(contentPadding: PaddingValues) {
         Text(
             fontSize = 68.sp,
             fontWeight = FontWeight.Bold,
-            text = ":(",
+            text = stringResource(id = R.string.empty_list_emoji),
             modifier = Modifier.rotate(90f)
         )
 

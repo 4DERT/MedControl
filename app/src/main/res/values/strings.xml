@@ -20,4 +20,5 @@
     <string name="no_upcoming_notifications">No upcoming notifications</string>
     <string name="time_for_medicine">Time for medicine!</string>
     <string name="time_for_medicine_text">You should take %s.</string>
+    <string name="empty_list_emoji">:(</string>
 </resources>
