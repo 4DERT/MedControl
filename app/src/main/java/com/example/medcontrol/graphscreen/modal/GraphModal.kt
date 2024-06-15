@@ -1,13 +1,11 @@
 package com.example.medcontrol.graphscreen.modal
 
 import android.app.Application
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -30,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -148,7 +147,7 @@ fun BloodPressureInputs(
     val iconSelectColor = OutlinedTextFieldDefaults.colors().focusedIndicatorColor
     val iconUnselectColor = OutlinedTextFieldDefaults.colors().unfocusedIndicatorColor
 
-    Column{
+    Column {
         OutlinedTextField(
             value = systolic?.toString() ?: "",
             onValueChange = { input ->
@@ -206,7 +205,6 @@ fun BloodPressureInputs(
             interactionSource = interactionSourceDiastolic
         )
     }
-
 
 
 }
@@ -284,6 +282,13 @@ fun ExposedDropdownMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val options = state.options
+    val interactionSource = remember { MutableInteractionSource() }
+    val iconSelectColor = OutlinedTextFieldDefaults.colors().focusedIndicatorColor
+    val iconUnselectColor = OutlinedTextFieldDefaults.colors().unfocusedIndicatorColor
+
+    val rotationState by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f, label = ""
+    )
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -294,11 +299,19 @@ fun ExposedDropdownMenu(
             onValueChange = { }, // No-op since the field is read-only
             label = { Text(stringResource(R.string.select_option)) },
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .rotate(rotationState),
+                    tint = if (interactionSource.collectIsFocusedAsState().value)
+                        iconSelectColor
+                    else
+                        iconUnselectColor
                 )
             },
             readOnly = true, // Make the TextField read-only
+            interactionSource = interactionSource,
             modifier = Modifier
                 .menuAnchor() // Anchor the menu to the text field
                 .fillMaxWidth()
