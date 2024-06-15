@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.medcontrol.R
 import com.example.medcontrol.graphdatabase.GraphDao
 import com.example.medcontrol.graphdatabase.GraphDatabase
+import com.example.medcontrol.graphscreen.modal.GraphModal
 import com.example.medcontrol.ui.theme.playwriteFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,6 +100,11 @@ fun GraphScreen(padding: PaddingValues) {
                 GraphScreenEmpty(innerPadding)
         }
 
+        GraphModal(
+            onHideDialog = {},
+            onDismissRequest = {},
+            onConfirm = {}
+        )
 
     }
 }
