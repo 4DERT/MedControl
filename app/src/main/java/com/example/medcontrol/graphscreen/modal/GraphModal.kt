@@ -170,7 +170,7 @@ fun BloodPressureInputs(
                         iconUnselectColor
                 )
             },
-            label = { Text("systolic") },
+            label = { Text(stringResource(id = R.string.systolic)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .fillMaxWidth(),
@@ -199,7 +199,7 @@ fun BloodPressureInputs(
                         iconUnselectColor
                 )
             },
-            label = { Text("diastolic") },
+            label = { Text(stringResource(id = R.string.diastolic)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .fillMaxWidth(),
@@ -229,7 +229,7 @@ fun BloodSugarInputs(
                     onBloodSugarChange(input.toInt())
             }
         },
-        label = { Text("Enter Blood Sugar (mg/dl)") },
+        label = { Text(stringResource(id = R.string.enter_blood_sugar)) },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth(),
         interactionSource = interactionSource
@@ -267,7 +267,7 @@ fun HeartRateInputs(
                     iconUnselectColor
             )
         },
-        label = { Text("Enter Heart Rate (bpm)") },
+        label = { Text(stringResource(id = R.string.enter_heart_rate)) },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth(),
         interactionSource = interactionSource
