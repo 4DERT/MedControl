@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.medcontrol.graphscreen.GraphScreen
 import com.example.medcontrol.homescreen.HomeScreen
 import com.example.medcontrol.infoscreen.InfoScreen
 
@@ -26,7 +27,7 @@ fun SetupNavGraph(
         }
 
         composable(Screen.Graph.route) {
-
+            GraphScreen(padding)
         }
 
         composable(Screen.Info.route) {
