@@ -82,4 +82,8 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
 
     implementation("androidx.room:room-ktx:$room_version")
+
+    // fix time picker 24h bug
+//    implementation("androidx.compose.material3:material3:1.3.0-beta03")
+    implementation("androidx.compose.material3:material3:1.2.0")
 }
