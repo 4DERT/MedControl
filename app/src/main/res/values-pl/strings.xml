@@ -37,4 +37,5 @@
     <string name="friday">piątek</string>
     <string name="saturday">sobota</string>
     <string name="sunday">niedziela</string>
+    <string name="graph_screen_empty">Brak wykresów do wyświetlenia\nAby zobaczyć wykresy, dodaj nowy wpis.</string>
 </resources>

@@ -20,7 +20,7 @@ fun SetupNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Graph.route,
     ) {
         composable(Screen.Home.route) {
             HomeScreen(padding)
