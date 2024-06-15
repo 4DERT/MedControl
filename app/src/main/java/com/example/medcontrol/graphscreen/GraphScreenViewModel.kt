@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.medcontrol.graphdatabase.GraphDao
 import com.example.medcontrol.graphdatabase.Pulse
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
@@ -18,6 +19,7 @@ class GraphScreenViewModel(
     private val appContext: Context = getApplication<Application>().applicationContext
 
     val state = MutableStateFlow<GraphScreenState>(GraphScreenState.Loading)
+    val fabState = MutableStateFlow(GraphScreenViewItem(false))
 
     init {
         state.value = GraphScreenState.Empty
@@ -33,6 +35,14 @@ class GraphScreenViewModel(
 
 
 
+    }
+
+    fun showModal() {
+        fabState.update { it.copy(true) }
+    }
+
+    fun hideModal() {
+        fabState.update { it.copy(false) }
     }
 
 

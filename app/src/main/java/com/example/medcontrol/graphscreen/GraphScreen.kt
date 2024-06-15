@@ -23,11 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,10 +33,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.medcontrol.R
-import com.example.medcontrol.graphdatabase.GraphDao
 import com.example.medcontrol.graphdatabase.GraphDatabase
 import com.example.medcontrol.graphscreen.modal.GraphModal
 import com.example.medcontrol.ui.theme.playwriteFontFamily
+
+data class GraphScreenViewItem(
+    val isModalVisible: Boolean,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +57,7 @@ fun GraphScreen(padding: PaddingValues) {
     })
 
     val state = viewModel.state.collectAsState()
-
+    val fabState = viewModel.fabState.collectAsState()
 
     val paddingValues = WindowInsets.navigationBars.asPaddingValues()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -81,7 +82,9 @@ fun GraphScreen(padding: PaddingValues) {
         },
 
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = {
+                viewModel.showModal()
+            }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         },
@@ -100,11 +103,16 @@ fun GraphScreen(padding: PaddingValues) {
                 GraphScreenEmpty(innerPadding)
         }
 
-        GraphModal(
-            onHideDialog = {},
-            onDismissRequest = {},
-            onConfirm = {}
-        )
+        if (fabState.value.isModalVisible)
+            GraphModal(
+                onHideDialog = {
+                    viewModel.hideModal()
+                },
+                onDismissRequest = {
+                    viewModel.hideModal()
+                },
+                onConfirm = {}
+            )
 
     }
 }
