@@ -6,16 +6,13 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.medcontrol.AlarmReceiver
+import com.example.medcontrol.R
 import com.example.medcontrol.database.MedicineDao
 import com.example.medcontrol.database.MedicineEntity
 import com.example.medcontrol.database.NotificationEntity
@@ -63,7 +60,7 @@ class HomeScreenViewModel(
                 id = medicineEntity.id,
                 name = medicineEntity.name,
                 notifications = makeNotificationViewItems(medicineEntity),
-                nextTake = makeNextTakeString( makeNotificationViewItems(medicineEntity) ),
+                nextTake = makeNextTakeString(makeNotificationViewItems(medicineEntity)),
             )
         }
     }
@@ -90,26 +87,54 @@ class HomeScreenViewModel(
         val today = now.dayOfWeek
         val currentTime = now.toLocalTime()
 
+        val daysOfWeek = listOf(
+            appContext.getString(R.string.monday),
+            appContext.getString(R.string.tuesday),
+            appContext.getString(R.string.wednesday),
+            appContext.getString(R.string.thursday),
+            appContext.getString(R.string.friday),
+            appContext.getString(R.string.saturday),
+            appContext.getString(R.string.sunday)
+        )
+
         val nextNotification = notifications
             .flatMap { notification ->
                 notification.selectedDays
                     .filter { it.value }
                     .map { day ->
-                        val notificationTime = LocalTime.of(notification.timeState.hour, notification.timeState.minute)
+                        val notificationTime =
+                            LocalTime.of(notification.timeState.hour, notification.timeState.minute)
                         val dayDifference = (day.key.value - today.value + 7) % 7
-                        val notificationDateTime = if (dayDifference == 0 && notificationTime.isAfter(currentTime)) {
-                            now.withHour(notification.timeState.hour).withMinute(notification.timeState.minute)
-                        } else {
-                            now.plusDays((if (dayDifference == 0) 7 else dayDifference).toLong())
-                                .withHour(notification.timeState.hour)
-                                .withMinute(notification.timeState.minute)
-                        }
-                        notificationDateTime
+                        val notificationDateTime =
+                            if (dayDifference == 0 && notificationTime.isAfter(currentTime)) {
+                                now.withHour(notification.timeState.hour)
+                                    .withMinute(notification.timeState.minute)
+                            } else {
+                                now.plusDays((if (dayDifference == 0) 7 else dayDifference).toLong())
+                                    .withHour(notification.timeState.hour)
+                                    .withMinute(notification.timeState.minute)
+                            }
+                        notificationDateTime to dayDifference
                     }
             }
-            .minOrNull()
+            .minByOrNull { it.first }
 
-        return nextNotification?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+        return nextNotification?.let {
+            val (dateTime, dayDifference) = it
+            val timeString = dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+            when (dayDifference) {
+                0 -> appContext.getString(R.string.today, timeString)
+                1 -> appContext.getString(R.string.tomorrow, timeString)
+                else -> {
+                    val dayName = daysOfWeek[(today.value + dayDifference - 1) % 7]
+                    if (dayDifference <= 7) {
+                        appContext.getString(R.string.on_day_at_time, dayName, timeString)
+                    } else {
+                        appContext.getString(R.string.next_week_on_day_at_time, dayName, timeString)
+                    }
+                }
+            }
+        }
     }
 
 
@@ -136,7 +161,7 @@ class HomeScreenViewModel(
 
     @OptIn(ExperimentalMaterial3Api::class)
     private fun toMedicineEntity(viewItem: MedicineViewItem): MedicineEntity {
-        val entity =  MedicineEntity(
+        val entity = MedicineEntity(
             id = viewItem.id,
             name = viewItem.name,
             notifications = viewItem.notifications.map { notificationViewItem ->
@@ -197,7 +222,10 @@ class HomeScreenViewModel(
                         set(Calendar.MINUTE, notification.timeState.minute)
                         set(Calendar.SECOND, 0)
                         set(Calendar.MILLISECOND, 0)
-                        set(Calendar.DAY_OF_WEEK, (dayOfWeek.value % 7) + 1) // Adjusting the day of the week
+                        set(
+                            Calendar.DAY_OF_WEEK,
+                            (dayOfWeek.value % 7) + 1
+                        ) // Adjusting the day of the week
 
                         // If the set time is before the current time, schedule it for the next week
                         if (before(Calendar.getInstance())) {

@@ -26,4 +26,15 @@
     <string name="home_page">Home</string>
     <string name="graph_page">Graph</string>
     <string name="info_page">Info</string>
+    <string name="today">today at %1$s</string>
+    <string name="tomorrow">tomorrow at %1$s</string>
+    <string name="on_day_at_time">on %1$s at %2$s</string>
+    <string name="next_week_on_day_at_time">next %1$s at %2$s</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
 </resources>

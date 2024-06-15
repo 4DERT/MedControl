@@ -26,4 +26,15 @@
     <string name="home_page">Główna</string>
     <string name="graph_page">Wykresy</string>
     <string name="info_page">O aplikacji</string>
+    <string name="today">dziś o %1$s</string>
+    <string name="tomorrow">jutro o %1$s</string>
+    <string name="on_day_at_time">w %1$s o %2$s</string>
+    <string name="next_week_on_day_at_time">w następny %1$s o %2$s</string>
+    <string name="monday">poniedziałek</string>
+    <string name="tuesday">wtorek</string>
+    <string name="wednesday">środa</string>
+    <string name="thursday">czwartek</string>
+    <string name="friday">piątek</string>
+    <string name="saturday">sobota</string>
+    <string name="sunday">niedziela</string>
 </resources>
