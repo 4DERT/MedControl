@@ -13,6 +13,10 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class Chart(
     context: Context,
@@ -41,6 +45,16 @@ class Chart(
         xAxis.position = XAxis.XAxisPosition.BOTTOM;
         xAxis.granularity = 1f
         xAxis.isEnabled = true
+
+        val dateFormat = SimpleDateFormat("d MMM HH:mm", Locale.getDefault())
+        xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val date = Date(value.toLong() * 1000)
+                return dateFormat.format(date)
+            }
+        }
+        chart.xAxis.labelRotationAngle = -45f
+
 
         // Y right axis settings
         val rightAxis = chart.axisRight
@@ -97,7 +111,12 @@ fun showSet(
     set.setDrawIcons(false)
     set.setDrawValues(isDrawValues)
     set.valueTextColor = valueTextColor.toArgb()
-    set.valueTextSize = textSize.value
+    set.valueTextSize = textSize.value // jak przesunac napis w prawo
+    set.valueFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return " ".repeat(3) + value.toString()
+        }
+    }
     set.lineWidth = lineWidth
     set.circleRadius = circleRadius
     set.setDrawFilled(isFillColor)

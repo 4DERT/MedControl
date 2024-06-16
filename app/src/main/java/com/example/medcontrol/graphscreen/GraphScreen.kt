@@ -142,7 +142,10 @@ fun GraphScreenSuccess(innerPadding: PaddingValues) {
         )
         GraphCard(
             title = "Blood Sugar",
-            chartData = listOf(Entry(1f,2f), Entry(2f, 2f), Entry(3f, 2f))
+            chartData = listOf(
+                Entry(1718562460f,2f),
+                Entry(1718662460f, 2f),
+                Entry(1718862460f, 2f))
         )
         GraphCard(
             title = "Blood Pressure",
