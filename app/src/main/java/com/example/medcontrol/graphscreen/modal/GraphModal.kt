@@ -52,7 +52,7 @@ data class GraphModalState(
 @Composable
 fun GraphModal(
     onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
+    onConfirm: (GraphModalState) -> Unit,
     onHideDialog: () -> Unit
 ) {
     val context = LocalContext.current
@@ -120,7 +120,7 @@ fun GraphModal(
         },
         confirmButton = {
             Button(onClick = {
-                onConfirm()
+                onConfirm(state.value)
                 onHideDialog()
             }) {
                 Text(context.getString(R.string.confirm))

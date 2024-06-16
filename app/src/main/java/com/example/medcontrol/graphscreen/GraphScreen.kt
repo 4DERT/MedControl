@@ -116,7 +116,9 @@ fun GraphScreen(padding: PaddingValues) {
                 onDismissRequest = {
                     viewModel.hideModal()
                 },
-                onConfirm = {}
+                onConfirm = { data ->
+                    viewModel.insertData(data)
+                }
             )
 
     }
