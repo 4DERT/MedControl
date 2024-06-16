@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -36,6 +39,7 @@ import com.example.medcontrol.R
 import com.example.medcontrol.graphdatabase.GraphDatabase
 import com.example.medcontrol.graphscreen.modal.GraphModal
 import com.example.medcontrol.ui.theme.playwriteFontFamily
+import com.github.mikephil.charting.data.Entry
 
 data class GraphScreenViewItem(
     val isModalVisible: Boolean,
@@ -100,7 +104,8 @@ fun GraphScreen(padding: PaddingValues) {
             }
 
             is GraphScreenState.Empty ->
-                GraphScreenEmpty(innerPadding)
+                GraphScreenSuccess(innerPadding)
+//                GraphScreenEmpty(innerPadding)
         }
 
         if (fabState.value.isModalVisible)
@@ -115,6 +120,36 @@ fun GraphScreen(padding: PaddingValues) {
             )
 
     }
+}
+
+@Composable
+fun GraphScreenSuccess(innerPadding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        GraphCard(
+            title = "Heart Rate",
+            chartData = listOf(
+                Entry(1f,1f),
+                Entry(2f, 2f),
+                Entry(3f, 1f),
+                Entry(4f, 2f),
+                Entry(5f, 3f),
+            )
+        )
+        GraphCard(
+            title = "Blood Sugar",
+            chartData = listOf(Entry(1f,2f), Entry(2f, 2f), Entry(3f, 2f))
+        )
+        GraphCard(
+            title = "Blood Pressure",
+            chartData = listOf(Entry(1f,6f), Entry(2f, 4f), Entry(3f, 2f))
+        )
+    }
+
 }
 
 
