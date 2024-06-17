@@ -20,7 +20,9 @@ import java.util.Locale
 
 class Chart(
     context: Context,
-    labels: List<String>
+    labels: List<String>,
+    textColor: Color,
+    gridColor: Color,
 ) {
     private val chart = LineChart(context)
 
@@ -45,6 +47,8 @@ class Chart(
         xAxis.gridLineWidth = gridWidth
         xAxis.position = XAxis.XAxisPosition.BOTTOM;
         xAxis.isEnabled = true
+        xAxis.textColor = textColor.toArgb()
+        xAxis.gridColor = gridColor.toArgb()
 
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -66,6 +70,8 @@ class Chart(
         rightAxis.setDrawAxisLine(true)
         rightAxis.setDrawGridLines(true)
         rightAxis.isEnabled = false
+        rightAxis.textColor = textColor.toArgb()
+        rightAxis.gridColor = gridColor.toArgb()
 
         // Y left axis settings
         val leftAxis: YAxis = chart.axisLeft
@@ -74,6 +80,8 @@ class Chart(
         leftAxis.setDrawLabels(true)
         leftAxis.gridLineWidth = gridWidth
         leftAxis.isEnabled = true
+        leftAxis.textColor = textColor.toArgb()
+        leftAxis.gridColor = gridColor.toArgb()
 
         // animations
 //        chart.animateX(400)
@@ -90,7 +98,20 @@ class Chart(
 
 }
 
-fun addLabels(chart: LineChart, labels: List<String>) {
+fun reRenderChart(
+    chart: LineChart,
+    labels: List<String>,
+    textColor: Color,
+    gridColor: Color
+) {
+    chart.xAxis.textColor = textColor.toArgb()
+    chart.axisRight.textColor = textColor.toArgb()
+    chart.axisLeft.textColor = textColor.toArgb()
+
+    chart.xAxis.gridColor = gridColor.toArgb()
+    chart.axisRight.gridColor = gridColor.toArgb()
+    chart.axisLeft.gridColor = gridColor.toArgb()
+
     chart.xAxis.valueFormatter = object : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
             val index = value.toInt()

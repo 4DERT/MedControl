@@ -54,6 +54,8 @@ fun GraphCard(
     val dataSetsColor = MaterialTheme.colorScheme.primaryContainer
     val fillColor = MaterialTheme.colorScheme.secondaryContainer
     val circleColor = MaterialTheme.colorScheme.primary
+    val textColor = MaterialTheme.colorScheme.onSurface
+    val gridColor = MaterialTheme.colorScheme.onSurface
 
     OutlinedCard(
         modifier = Modifier
@@ -74,7 +76,9 @@ fun GraphCard(
             factory = { context ->
                 Chart(
                     context = context,
-                    labels = chartData.labels
+                    labels = chartData.labels,
+                    textColor = textColor,
+                    gridColor = gridColor
                 )
                     .getChart()
             },
@@ -100,7 +104,7 @@ fun GraphCard(
                         fillColor = fillColor,
                         isFillColor = true,
                         isDrawValues = true,
-                        valueTextColor = Color.Black
+                        valueTextColor = textColor
                     )
                 else
                     showTwoSets(
@@ -120,12 +124,14 @@ fun GraphCard(
                         fillColor = fillColor,
                         isFillColor = true,
                         isDrawValues = true,
-                        valueTextColor = Color.Black
+                        valueTextColor = textColor
                     )
 
-                addLabels(
+                reRenderChart(
                     chart = chart,
-                    labels = chartData.labels
+                    labels = chartData.labels,
+                    textColor = textColor,
+                    gridColor = gridColor
                 )
 
             }
