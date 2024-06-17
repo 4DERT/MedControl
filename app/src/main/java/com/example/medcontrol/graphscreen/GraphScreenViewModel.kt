@@ -14,10 +14,13 @@ import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.util.Date
+import java.util.Locale
 
 class GraphScreenViewModel(
     private val graphDao: GraphDao,
@@ -33,11 +36,11 @@ class GraphScreenViewModel(
         viewModelScope.launch {
             state.value = GraphScreenState.Loading
 
-            val pulseData = graphDao.getAllPulses()
-            val bloodSugarData = graphDao.getAllBloodSugars()
-            val bloodPressureData = graphDao.getAllBloodPressures()
+            val pulseData = graphDao.getAllPulses().sortedBy { it.id }
+            val bloodSugarData = graphDao.getAllBloodSugars().sortedBy { it.id }
+            val bloodPressureData = graphDao.getAllBloodPressures().sortedBy { it.id }
 
-            if(pulseData.size < 2 && bloodSugarData.size < 2 && bloodPressureData.size < 2) {
+            if (pulseData.size < 2 && bloodSugarData.size < 2 && bloodPressureData.size < 2) {
                 state.value = GraphScreenState.Empty
                 return@launch
             }
@@ -45,13 +48,46 @@ class GraphScreenViewModel(
 
             // Create lists of Entry objects
             val heartRateEntries =
-                pulseData.map { Entry(it.timestamp.toFloat(), it.pulse.toFloat()) }
+                GraphData(
+                    labels = pulseData.map { pulse: Pulse -> getFormattedDateTime(pulse.timestamp) },
+                    entries = pulseData.map { pulse: Pulse ->
+                        Entry(
+                            pulse.id.toFloat(),
+                            pulse.pulse.toFloat()
+                        )
+                    }.sortedBy { it.x }
+                )
+
             val bloodSugarEntries =
-                bloodSugarData.map { Entry(it.timestamp.toFloat(), it.bloodSugar) }
+                GraphData(
+                    labels = bloodSugarData.map { bloodSugar: BloodSugar -> getFormattedDateTime(bloodSugar.timestamp) },
+                    entries = bloodSugarData.map { bloodSugar: BloodSugar ->
+                        Entry(
+                            bloodSugar.id.toFloat(),
+                            bloodSugar.bloodSugar
+                        )
+                    }
+                )
             val systolicEntries =
-                bloodPressureData.map { Entry(it.timestamp.toFloat(), it.systolic.toFloat()) }
+                GraphData(
+                    labels = bloodPressureData.map { bloodPressure: BloodPressure -> getFormattedDateTime(bloodPressure.timestamp) },
+                    entries = bloodPressureData.map { bloodPressure: BloodPressure ->
+                        Entry(
+                            bloodPressure.id.toFloat(),
+                            bloodPressure.systolic.toFloat()
+                        )
+                    }
+                )
             val diastolicEntries =
-                bloodPressureData.map { Entry(it.timestamp.toFloat(), it.diastolic.toFloat()) }
+                GraphData(
+                    labels = bloodPressureData.map { bloodPressure: BloodPressure -> getFormattedDateTime(bloodPressure.timestamp) },
+                    entries = bloodPressureData.map { bloodPressure: BloodPressure ->
+                        Entry(
+                            bloodPressure.id.toFloat(),
+                            bloodPressure.diastolic.toFloat()
+                        )
+                    }
+                )
 
             // Create GraphDataViewItem
             val graphDataViewItem = GraphDataViewItem(
@@ -64,6 +100,12 @@ class GraphScreenViewModel(
             // Update state with the new data
             state.value = GraphScreenState.Success(graphDataViewItem)
         }
+    }
+
+    private fun getFormattedDateTime(timestamp: Long): String {
+        val dateFormat = SimpleDateFormat("d MMM HH:mm", Locale.getDefault())
+        val date = Date(timestamp * 1000)
+        return dateFormat.format(date)
     }
 
     fun showModal() {

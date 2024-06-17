@@ -14,10 +14,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.data.Entry
 
+data class GraphData(
+    val entries: List<Entry>,
+    val labels: List<String>
+)
+
 @Composable
 fun GraphCard(
     title: String,
-    chartData: List<Entry>
+    chartData: GraphData
 ) {
 
     val dataSetsColor = MaterialTheme.colorScheme.primaryContainer
@@ -40,6 +45,7 @@ fun GraphCard(
             factory = { context ->
                 Chart(
                     context = context,
+                    labels = chartData.labels
                 )
                     .getChart()
             },
@@ -51,7 +57,7 @@ fun GraphCard(
 
                 showSet(
                     chart = chart,
-                    dataSet = chartData,
+                    dataSet = chartData.entries,
                     dataSetsColor = dataSetsColor,
                     circleColor = circleColor,
                     drawCircles = true,

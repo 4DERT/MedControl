@@ -47,10 +47,10 @@ data class GraphScreenViewItem(
 )
 
 data class GraphDataViewItem(
-    val hearthRateData: List<Entry>,
-    val bloodSugarData: List<Entry>,
-    val bloodPressureSystolicData: List<Entry>,
-    val bloodPressureDiastolicData: List<Entry>
+    val hearthRateData: GraphData,
+    val bloodSugarData: GraphData,
+    val bloodPressureSystolicData: GraphData,
+    val bloodPressureDiastolicData: GraphData
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,17 +143,13 @@ fun GraphScreenSuccess(
             .verticalScroll(rememberScrollState())
     ) {
 
-        if (graphData.hearthRateData.size > 1) {
+        if (graphData.hearthRateData.entries.size > 1) {
             GraphCard(
                 title = "Heart Rate",
-                chartData = listOf(
-                    Entry(1f , 2f),
-                    Entry(2f, 4f),
-                    Entry(3f, 3f)
-                )
+                chartData = graphData.hearthRateData
             )
         }
-        if (graphData.bloodSugarData.size > 1) {
+        if (graphData.bloodSugarData.entries.size > 1) {
             GraphCard(
                 title = "Blood Sugar",
                 chartData = graphData.bloodSugarData

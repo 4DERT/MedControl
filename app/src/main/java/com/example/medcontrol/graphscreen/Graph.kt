@@ -20,6 +20,7 @@ import java.util.Locale
 
 class Chart(
     context: Context,
+    labels: List<String>
 ) {
     private val chart = LineChart(context)
 
@@ -43,18 +44,22 @@ class Chart(
         xAxis.setDrawGridLines(isGridLines)
         xAxis.gridLineWidth = gridWidth
         xAxis.position = XAxis.XAxisPosition.BOTTOM;
-        xAxis.granularity = 1f
         xAxis.isEnabled = true
 
-        val dateFormat = SimpleDateFormat("d MMM HH:mm", Locale.getDefault())
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                val date = Date(value.toLong() * 1000)
-                return dateFormat.format(date)
+                val index = value.toInt()
+                return if (index >= 0 && index < labels.size) {
+                    labels[index]
+                } else {
+                    ""
+                }
             }
         }
-        chart.xAxis.labelRotationAngle = -45f
 
+        chart.xAxis.labelRotationAngle = -45f
+        xAxis.granularity = .1f
+        xAxis.isGranularityEnabled = true
 
         // Y right axis settings
         val rightAxis = chart.axisRight
@@ -71,7 +76,7 @@ class Chart(
         leftAxis.isEnabled = true
 
         // animations
-//        chart.animateX(1000)
+//        chart.animateX(400)
 
         // legend settings
         val legend = chart.legend
@@ -111,10 +116,10 @@ fun showSet(
     set.setDrawIcons(false)
     set.setDrawValues(isDrawValues)
     set.valueTextColor = valueTextColor.toArgb()
-    set.valueTextSize = textSize.value // jak przesunac napis w prawo
+    set.valueTextSize = textSize.value
     set.valueFormatter = object : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
-            return " ".repeat(3) + value.toString()
+            return " ".repeat(4) + value.toString()
         }
     }
     set.lineWidth = lineWidth
