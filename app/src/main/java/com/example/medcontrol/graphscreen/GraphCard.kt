@@ -1,13 +1,22 @@
 package com.example.medcontrol.graphscreen
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,21 +28,40 @@ data class GraphData(
     val labels: List<String>
 )
 
+@SuppressLint("UnnecessaryComposedModifier")
+fun Modifier.clickableWithoutRipple(
+    interactionSource: MutableInteractionSource,
+    onClick: () -> Unit
+) = composed(
+    factory = {
+        this.then(
+            Modifier.clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = { onClick() }
+            )
+        )
+    }
+)
+
 @Composable
 fun GraphCard(
     title: String,
     chartData: GraphData,
     secondChartData: GraphData? = null
 ) {
-
+    val interactionSource = remember { MutableInteractionSource() }
     val dataSetsColor = MaterialTheme.colorScheme.primaryContainer
     val fillColor = MaterialTheme.colorScheme.secondaryContainer
     val circleColor = MaterialTheme.colorScheme.primary
 
     OutlinedCard(
-        onClick = { },
         modifier = Modifier
             .padding(8.dp)
+            .clickableWithoutRipple(
+                interactionSource = interactionSource,
+                onClick = {}
+            )
     ) {
         Text(
             text = title,
@@ -56,7 +84,7 @@ fun GraphCard(
                 .padding(top = 0.dp, start = 12.dp, end = 12.dp, bottom = 12.dp),
             update = { chart ->
 
-                if(secondChartData == null)
+                if (secondChartData == null)
                     showSet(
                         chart = chart,
                         dataSet = chartData.entries,
@@ -102,8 +130,8 @@ fun GraphCard(
 
             }
         )
-    }
 
+    }
 
 
 }

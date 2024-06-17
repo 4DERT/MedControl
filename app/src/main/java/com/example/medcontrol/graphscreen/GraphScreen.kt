@@ -145,13 +145,13 @@ fun GraphScreenSuccess(
 
         if (graphData.hearthRateData.entries.size > 1) {
             GraphCard(
-                title = "Heart Rate",
+                title = stringResource(id = R.string.heart_rate),
                 chartData = graphData.hearthRateData
             )
         }
         if (graphData.bloodSugarData.entries.size > 1) {
             GraphCard(
-                title = "Blood Sugar",
+                title = stringResource(id = R.string.blood_sugar),
                 chartData = graphData.bloodSugarData
             )
         }
@@ -159,7 +159,7 @@ fun GraphScreenSuccess(
             graphData.bloodPressureDiastolicData.entries.size > 1
         ) {
             GraphCard(
-                title = "Blood Pressure Systolic",
+                title = stringResource(id = R.string.blood_pressure),
                 chartData = graphData.bloodPressureSystolicData,
                 secondChartData = graphData.bloodPressureDiastolicData
             )

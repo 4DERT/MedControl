@@ -189,7 +189,7 @@ fun showTwoSets(
     val data = LineData()
 
     // Set up the first data set
-    val set1 = LineDataSet(dataSet1, "DataSet 1")
+    val set1 = LineDataSet(dataSet1, "")
     set1.color = dataSet1Color.toArgb()
     set1.setDrawCircleHole(false)
     set1.setDrawIcons(false)
@@ -216,7 +216,7 @@ fun showTwoSets(
     data.addDataSet(set1)
 
     // Set up the second data set
-    val set2 = LineDataSet(dataSet2, "DataSet 2")
+    val set2 = LineDataSet(dataSet2, "")
     set2.color = dataSet2Color.toArgb()
     set2.setDrawCircleHole(false)
     set2.setDrawIcons(false)
