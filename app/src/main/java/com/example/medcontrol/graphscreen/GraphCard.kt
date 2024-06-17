@@ -73,6 +73,11 @@ fun GraphCard(
                     valueTextColor = Color.Black
                 )
 
+                addLabels(
+                    chart = chart,
+                    labels = chartData.labels
+                )
+
             }
         )
     }

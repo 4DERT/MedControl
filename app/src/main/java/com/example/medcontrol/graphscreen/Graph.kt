@@ -90,6 +90,19 @@ class Chart(
 
 }
 
+fun addLabels(chart: LineChart, labels: List<String>) {
+    chart.xAxis.valueFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            val index = value.toInt()
+            return if (index >= 0 && index < labels.size) {
+                labels[index]
+            } else {
+                ""
+            }
+        }
+    }
+}
+
 fun showSet(
     chart: LineChart,
     dataSet: List<Entry>,

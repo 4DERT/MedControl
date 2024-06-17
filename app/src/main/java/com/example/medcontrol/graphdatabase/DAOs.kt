@@ -3,6 +3,7 @@ package com.example.medcontrol.graphdatabase
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GraphDao {
@@ -10,17 +11,17 @@ interface GraphDao {
     suspend fun insert(bloodPressure: BloodPressure)
 
     @Query("SELECT * FROM blood_pressure ORDER BY timestamp DESC")
-    suspend fun getAllBloodPressures(): List<BloodPressure>
+    fun getAllBloodPressures(): Flow<List<BloodPressure>>
 
     @Insert
     suspend fun insert(pulse: Pulse)
 
     @Query("SELECT * FROM pulse ORDER BY timestamp DESC")
-    suspend fun getAllPulses(): List<Pulse>
+    fun getAllPulses(): Flow<List<Pulse>>
 
     @Insert
     suspend fun insert(bloodSugar: BloodSugar)
 
     @Query("SELECT * FROM blood_sugar ORDER BY timestamp DESC")
-    suspend fun getAllBloodSugars(): List<BloodSugar>
+    fun getAllBloodSugars(): Flow<List<BloodSugar>>
 }

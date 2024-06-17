@@ -12,6 +12,10 @@ import com.example.medcontrol.graphscreen.modal.GraphModalState
 import com.example.medcontrol.graphscreen.modal.Option
 import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -32,56 +36,81 @@ class GraphScreenViewModel(
     val state = MutableStateFlow<GraphScreenState>(GraphScreenState.Empty)
     val fabState = MutableStateFlow(GraphScreenViewItem(false))
 
+    private val pulseData: StateFlow<List<Pulse>> = graphDao.getAllPulses()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    private val bloodSugarData = graphDao.getAllBloodSugars()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    private val bloodPressureData = graphDao.getAllBloodPressures()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     init {
         viewModelScope.launch {
             state.value = GraphScreenState.Loading
 
-            val pulseData = graphDao.getAllPulses().sortedBy { it.id }
-            val bloodSugarData = graphDao.getAllBloodSugars().sortedBy { it.id }
-            val bloodPressureData = graphDao.getAllBloodPressures().sortedBy { it.id }
+            combine(
+                pulseData,
+                bloodSugarData,
+                bloodPressureData
+            ) { pulseList, bloodSugarList, bloodPressureList ->
+                Triple(pulseList, bloodSugarList, bloodPressureList)
+            }.collect { (pulseList, bloodSugarList, bloodPressureList) ->
+                val sortedPulseData = pulseList.sortedBy { it.id }
+                val sortedBloodSugarData = bloodSugarList.sortedBy { it.id }
+                val sortedBloodPressureData = bloodPressureList.sortedBy { it.id }
 
-            if (pulseData.size < 2 && bloodSugarData.size < 2 && bloodPressureData.size < 2) {
-                state.value = GraphScreenState.Empty
-                return@launch
-            }
+                if (sortedPulseData.size < 2 && sortedBloodSugarData.size < 2 && sortedBloodPressureData.size < 2) {
+                    state.value = GraphScreenState.Empty
+                    return@collect
+                }
 
-
-            // Create lists of Entry objects
-            val heartRateEntries =
-                GraphData(
-                    labels = pulseData.map { pulse: Pulse -> getFormattedDateTime(pulse.timestamp) },
-                    entries = pulseData.map { pulse: Pulse ->
+                // Create lists of Entry objects
+                val heartRateEntries = GraphData(
+                    labels = sortedPulseData.map { pulse: Pulse -> getFormattedDateTime(pulse.timestamp) },
+                    entries = sortedPulseData.map { pulse: Pulse ->
                         Entry(
                             pulse.id.toFloat(),
                             pulse.pulse.toFloat()
                         )
-                    }.sortedBy { it.x }
+                    }
                 )
 
-            val bloodSugarEntries =
-                GraphData(
-                    labels = bloodSugarData.map { bloodSugar: BloodSugar -> getFormattedDateTime(bloodSugar.timestamp) },
-                    entries = bloodSugarData.map { bloodSugar: BloodSugar ->
+                val bloodSugarEntries = GraphData(
+                    labels = sortedBloodSugarData.map { bloodSugar: BloodSugar ->
+                        getFormattedDateTime(
+                            bloodSugar.timestamp
+                        )
+                    },
+                    entries = sortedBloodSugarData.map { bloodSugar: BloodSugar ->
                         Entry(
                             bloodSugar.id.toFloat(),
                             bloodSugar.bloodSugar
                         )
                     }
                 )
-            val systolicEntries =
-                GraphData(
-                    labels = bloodPressureData.map { bloodPressure: BloodPressure -> getFormattedDateTime(bloodPressure.timestamp) },
-                    entries = bloodPressureData.map { bloodPressure: BloodPressure ->
+
+                val systolicEntries = GraphData(
+                    labels = sortedBloodPressureData.map { bloodPressure: BloodPressure ->
+                        getFormattedDateTime(
+                            bloodPressure.timestamp
+                        )
+                    },
+                    entries = sortedBloodPressureData.map { bloodPressure: BloodPressure ->
                         Entry(
                             bloodPressure.id.toFloat(),
                             bloodPressure.systolic.toFloat()
                         )
                     }
                 )
-            val diastolicEntries =
-                GraphData(
-                    labels = bloodPressureData.map { bloodPressure: BloodPressure -> getFormattedDateTime(bloodPressure.timestamp) },
-                    entries = bloodPressureData.map { bloodPressure: BloodPressure ->
+
+                val diastolicEntries = GraphData(
+                    labels = sortedBloodPressureData.map { bloodPressure: BloodPressure ->
+                        getFormattedDateTime(
+                            bloodPressure.timestamp
+                        )
+                    },
+                    entries = sortedBloodPressureData.map { bloodPressure: BloodPressure ->
                         Entry(
                             bloodPressure.id.toFloat(),
                             bloodPressure.diastolic.toFloat()
@@ -89,18 +118,20 @@ class GraphScreenViewModel(
                     }
                 )
 
-            // Create GraphDataViewItem
-            val graphDataViewItem = GraphDataViewItem(
-                hearthRateData = heartRateEntries,
-                bloodSugarData = bloodSugarEntries,
-                bloodPressureSystolicData = systolicEntries,
-                bloodPressureDiastolicData = diastolicEntries
-            )
+                // Create GraphDataViewItem
+                val graphDataViewItem = GraphDataViewItem(
+                    hearthRateData = heartRateEntries,
+                    bloodSugarData = bloodSugarEntries,
+                    bloodPressureSystolicData = systolicEntries,
+                    bloodPressureDiastolicData = diastolicEntries
+                )
 
-            // Update state with the new data
-            state.value = GraphScreenState.Success(graphDataViewItem)
+                // Update state with the new data
+                state.value = GraphScreenState.Success(graphDataViewItem)
+            }
         }
     }
+
 
     private fun getFormattedDateTime(timestamp: Long): String {
         val dateFormat = SimpleDateFormat("d MMM HH:mm", Locale.getDefault())
@@ -121,7 +152,8 @@ class GraphScreenViewModel(
             val localTime = LocalTime.now()
             val currentDate = LocalDate.now()
             val dateTime = LocalDateTime.of(currentDate, localTime)
-            val unixTime = dateTime.toEpochSecond(ZoneId.systemDefault().rules.getOffset(dateTime))
+            val unixTime =
+                dateTime.toEpochSecond(ZoneId.systemDefault().rules.getOffset(dateTime))
 
             when (data.selectedOption) {
                 Option.HEART_RATE -> {
