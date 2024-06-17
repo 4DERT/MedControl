@@ -1,6 +1,7 @@
 package com.example.medcontrol.graphscreen
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,6 +44,13 @@ import com.github.mikephil.charting.data.Entry
 
 data class GraphScreenViewItem(
     val isModalVisible: Boolean,
+)
+
+data class GraphDataViewItem(
+    val hearthRateData: List<Entry>,
+    val bloodSugarData: List<Entry>,
+    val bloodPressureSystolicData: List<Entry>,
+    val bloodPressureDiastolicData: List<Entry>
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,17 +103,16 @@ fun GraphScreen(padding: PaddingValues) {
 
         ) { innerPadding ->
 
-        when (state.value) {
+        when (val listState = state.value) {
             is GraphScreenState.Loading ->
                 GraphScreenLoading(innerPadding)
 
             is GraphScreenState.Success -> {
-
+                GraphScreenSuccess(innerPadding, listState.data)
             }
 
             is GraphScreenState.Empty ->
-                GraphScreenSuccess(innerPadding)
-//                GraphScreenEmpty(innerPadding)
+                GraphScreenEmpty(innerPadding)
         }
 
         if (fabState.value.isModalVisible)
@@ -125,34 +132,41 @@ fun GraphScreen(padding: PaddingValues) {
 }
 
 @Composable
-fun GraphScreenSuccess(innerPadding: PaddingValues) {
+fun GraphScreenSuccess(
+    innerPadding: PaddingValues,
+    graphData: GraphDataViewItem
+) {
     Column(
         modifier = Modifier
             .padding(innerPadding)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        GraphCard(
-            title = "Heart Rate",
-            chartData = listOf(
-                Entry(1f,1f),
-                Entry(2f, 2f),
-                Entry(3f, 1f),
-                Entry(4f, 2f),
-                Entry(5f, 3f),
+
+        if (graphData.hearthRateData.size > 1) {
+            GraphCard(
+                title = "Heart Rate",
+                chartData = listOf(
+                    Entry(1f , 2f),
+                    Entry(2f, 4f),
+                    Entry(3f, 3f)
+                )
             )
-        )
-        GraphCard(
-            title = "Blood Sugar",
-            chartData = listOf(
-                Entry(1718562460f,2f),
-                Entry(1718662460f, 2f),
-                Entry(1718862460f, 2f))
-        )
-        GraphCard(
-            title = "Blood Pressure",
-            chartData = listOf(Entry(1f,6f), Entry(2f, 4f), Entry(3f, 2f))
-        )
+        }
+        if (graphData.bloodSugarData.size > 1) {
+            GraphCard(
+                title = "Blood Sugar",
+                chartData = graphData.bloodSugarData
+            )
+        }
+//        if (graphData.bloodPressureSystolicData.size > 1 &&
+//            graphData.bloodPressureDiastolicData.size > 1
+//        ) {
+//            GraphCard(
+//                title = "Blood Pressure Systolic",
+//                chartData = graphData.bloodPressureSystolicData
+//            )
+//        }
     }
 
 }

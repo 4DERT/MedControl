@@ -10,6 +10,7 @@ import com.example.medcontrol.graphdatabase.GraphDao
 import com.example.medcontrol.graphdatabase.Pulse
 import com.example.medcontrol.graphscreen.modal.GraphModalState
 import com.example.medcontrol.graphscreen.modal.Option
+import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,32 +18,52 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 
 class GraphScreenViewModel(
     private val graphDao: GraphDao,
     application: Application
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
     private val appContext: Context = getApplication<Application>().applicationContext
 
-    val state = MutableStateFlow<GraphScreenState>(GraphScreenState.Loading)
+    val state = MutableStateFlow<GraphScreenState>(GraphScreenState.Empty)
     val fabState = MutableStateFlow(GraphScreenViewItem(false))
 
     init {
-        state.value = GraphScreenState.Empty
+        viewModelScope.launch {
+            state.value = GraphScreenState.Loading
 
-//        val pulse = Pulse(
-//            pulse = 66,
-//            timestamp = 1
-//        )
+            val pulseData = graphDao.getAllPulses()
+            val bloodSugarData = graphDao.getAllBloodSugars()
+            val bloodPressureData = graphDao.getAllBloodPressures()
 
-//        viewModelScope.launch {
-//            graphDao.insert(pulse)
-//        }
+            if(pulseData.size < 2 && bloodSugarData.size < 2 && bloodPressureData.size < 2) {
+                state.value = GraphScreenState.Empty
+                return@launch
+            }
 
 
+            // Create lists of Entry objects
+            val heartRateEntries =
+                pulseData.map { Entry(it.timestamp.toFloat(), it.pulse.toFloat()) }
+            val bloodSugarEntries =
+                bloodSugarData.map { Entry(it.timestamp.toFloat(), it.bloodSugar) }
+            val systolicEntries =
+                bloodPressureData.map { Entry(it.timestamp.toFloat(), it.systolic.toFloat()) }
+            val diastolicEntries =
+                bloodPressureData.map { Entry(it.timestamp.toFloat(), it.diastolic.toFloat()) }
 
+            // Create GraphDataViewItem
+            val graphDataViewItem = GraphDataViewItem(
+                hearthRateData = heartRateEntries,
+                bloodSugarData = bloodSugarEntries,
+                bloodPressureSystolicData = systolicEntries,
+                bloodPressureDiastolicData = diastolicEntries
+            )
+
+            // Update state with the new data
+            state.value = GraphScreenState.Success(graphDataViewItem)
+        }
     }
 
     fun showModal() {
@@ -60,9 +81,9 @@ class GraphScreenViewModel(
             val dateTime = LocalDateTime.of(currentDate, localTime)
             val unixTime = dateTime.toEpochSecond(ZoneId.systemDefault().rules.getOffset(dateTime))
 
-            when(data.selectedOption) {
+            when (data.selectedOption) {
                 Option.HEART_RATE -> {
-                    if(data.pulse == null)
+                    if (data.pulse == null)
                         return@launch
 
                     val pulse = Pulse(
@@ -71,8 +92,9 @@ class GraphScreenViewModel(
                     )
                     graphDao.insert(pulse)
                 }
+
                 Option.BLOOD_SUGAR -> {
-                    if(data.bloodSugar == null)
+                    if (data.bloodSugar == null)
                         return@launch
 
                     val bloodSugar = BloodSugar(
@@ -81,8 +103,9 @@ class GraphScreenViewModel(
                     )
                     graphDao.insert(bloodSugar)
                 }
+
                 Option.BLOOD_PRESSURE -> {
-                    if(data.systolic == null || data.diastolic == null)
+                    if (data.systolic == null || data.diastolic == null)
                         return@launch
 
                     val bloodPressure = BloodPressure(
@@ -92,6 +115,7 @@ class GraphScreenViewModel(
                     )
                     graphDao.insert(bloodPressure)
                 }
+
                 null -> {}
             }
         }
