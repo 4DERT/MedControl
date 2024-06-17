@@ -37,7 +37,7 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
-    <string name="graph_screen_empty">No charts to display.\nTo see charts, please add a new entry.</string>
+    <string name="graph_screen_empty">No charts to display.\nTo see charts, please minimum two entries.</string>
     <string name="add_entry">Add entry</string>
     <string name="heart_rate">Heart rate</string>
     <string name="blood_sugar">Blood sugar</string>
