@@ -166,6 +166,99 @@ fun showSet(
     return chart
 }
 
+fun showTwoSets(
+    chart: LineChart,
+    dataSet1: List<Entry>,
+    dataSet2: List<Entry>,
+    limitLineValue: Float? = null,
+    drawCircles: Boolean,
+    dataSet1Color: Color,
+    dataSet2Color: Color,
+    highLightColor: Color,
+    limitLineColor: Color,
+    circleColor: Color,
+    textSize: Dp,
+    lineWidth: Float,
+    circleRadius: Float,
+    isFillColor: Boolean,
+    fillColor: Color,
+    isDrawValues: Boolean,
+    valueTextColor: Color
+): LineChart {
+
+    val data = LineData()
+
+    // Set up the first data set
+    val set1 = LineDataSet(dataSet1, "DataSet 1")
+    set1.color = dataSet1Color.toArgb()
+    set1.setDrawCircleHole(false)
+    set1.setDrawIcons(false)
+    set1.setDrawValues(isDrawValues)
+    set1.valueTextColor = valueTextColor.toArgb()
+    set1.valueTextSize = textSize.value
+    set1.valueFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return " ".repeat(4) + value.toString()
+        }
+    }
+    set1.lineWidth = lineWidth
+    set1.circleRadius = circleRadius
+    set1.setDrawFilled(isFillColor)
+    set1.fillColor = fillColor.toArgb()
+    set1.setDrawCircles(drawCircles)
+    set1.setCircleColor(circleColor.toArgb())
+    set1.mode = LineDataSet.Mode.CUBIC_BEZIER
+    set1.highLightColor = highLightColor.toArgb()
+    set1.highlightLineWidth = 2f
+    set1.setDrawHorizontalHighlightIndicator(false)
+    set1.setDrawHighlightIndicators(false)
+
+    data.addDataSet(set1)
+
+    // Set up the second data set
+    val set2 = LineDataSet(dataSet2, "DataSet 2")
+    set2.color = dataSet2Color.toArgb()
+    set2.setDrawCircleHole(false)
+    set2.setDrawIcons(false)
+    set2.setDrawValues(isDrawValues)
+    set2.valueTextColor = valueTextColor.toArgb()
+    set2.valueTextSize = textSize.value
+    set2.valueFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return " ".repeat(4) + value.toString()
+        }
+    }
+    set2.lineWidth = lineWidth
+    set2.circleRadius = circleRadius
+    set2.setDrawFilled(isFillColor)
+    set2.fillColor = fillColor.toArgb()
+    set2.setDrawCircles(drawCircles)
+    set2.setCircleColor(circleColor.toArgb())
+    set2.mode = LineDataSet.Mode.CUBIC_BEZIER
+    set2.highLightColor = highLightColor.toArgb()
+    set2.highlightLineWidth = 2f
+    set2.setDrawHorizontalHighlightIndicator(false)
+    set2.setDrawHighlightIndicators(false)
+
+    data.addDataSet(set2)
+
+    chart.data = data
+
+    chart.axisLeft.removeAllLimitLines()
+
+    // Add horizontal limit line if limitLineValue is provided
+    if (limitLineValue != null) {
+        val line = LimitLine(limitLineValue)
+        line.lineWidth = 2f
+        line.lineColor = limitLineColor.toArgb()
+        chart.axisLeft.addLimitLine(line)
+    }
+
+    chart.invalidate()
+
+    return chart
+}
+
 
 fun showMultipleSets(
     chart: LineChart,

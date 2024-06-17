@@ -155,14 +155,15 @@ fun GraphScreenSuccess(
                 chartData = graphData.bloodSugarData
             )
         }
-//        if (graphData.bloodPressureSystolicData.size > 1 &&
-//            graphData.bloodPressureDiastolicData.size > 1
-//        ) {
-//            GraphCard(
-//                title = "Blood Pressure Systolic",
-//                chartData = graphData.bloodPressureSystolicData
-//            )
-//        }
+        if (graphData.bloodPressureSystolicData.entries.size > 1 &&
+            graphData.bloodPressureDiastolicData.entries.size > 1
+        ) {
+            GraphCard(
+                title = "Blood Pressure Systolic",
+                chartData = graphData.bloodPressureSystolicData,
+                secondChartData = graphData.bloodPressureDiastolicData
+            )
+        }
     }
 
 }

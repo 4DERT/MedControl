@@ -22,7 +22,8 @@ data class GraphData(
 @Composable
 fun GraphCard(
     title: String,
-    chartData: GraphData
+    chartData: GraphData,
+    secondChartData: GraphData? = null
 ) {
 
     val dataSetsColor = MaterialTheme.colorScheme.primaryContainer
@@ -55,23 +56,44 @@ fun GraphCard(
                 .padding(top = 0.dp, start = 12.dp, end = 12.dp, bottom = 12.dp),
             update = { chart ->
 
-                showSet(
-                    chart = chart,
-                    dataSet = chartData.entries,
-                    dataSetsColor = dataSetsColor,
-                    circleColor = circleColor,
-                    drawCircles = true,
-                    highLightColor = Color.Transparent,
-                    limitLineColor = Color.Transparent,
-                    textSize = 13.dp,
-                    lineWidth = 4f,
-                    circleRadius = 3.8f,
-                    limitLineValue = null,
-                    fillColor = fillColor,
-                    isFillColor = true,
-                    isDrawValues = true,
-                    valueTextColor = Color.Black
-                )
+                if(secondChartData == null)
+                    showSet(
+                        chart = chart,
+                        dataSet = chartData.entries,
+                        dataSetsColor = dataSetsColor,
+                        circleColor = circleColor,
+                        drawCircles = true,
+                        highLightColor = Color.Transparent,
+                        limitLineColor = Color.Transparent,
+                        textSize = 13.dp,
+                        lineWidth = 4f,
+                        circleRadius = 3.8f,
+                        limitLineValue = null,
+                        fillColor = fillColor,
+                        isFillColor = true,
+                        isDrawValues = true,
+                        valueTextColor = Color.Black
+                    )
+                else
+                    showTwoSets(
+                        chart = chart,
+                        dataSet1 = chartData.entries,
+                        dataSet2 = secondChartData.entries,
+                        dataSet1Color = dataSetsColor,
+                        dataSet2Color = dataSetsColor,
+                        circleColor = circleColor,
+                        drawCircles = true,
+                        highLightColor = Color.Transparent,
+                        limitLineColor = Color.Transparent,
+                        textSize = 13.dp,
+                        lineWidth = 4f,
+                        circleRadius = 3.8f,
+                        limitLineValue = null,
+                        fillColor = fillColor,
+                        isFillColor = true,
+                        isDrawValues = true,
+                        valueTextColor = Color.Black
+                    )
 
                 addLabels(
                     chart = chart,
